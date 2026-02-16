@@ -220,14 +220,6 @@
                     <div class="cart-items" id="cart-items">
                         <!-- Cart items will be injected here -->
                     </div>
-                    <div class="delivery-info-form">
-                        <h3>Delivery Details</h3>
-                        <input type="text" id="delivery-name" placeholder="Full Delivery Name" required>
-                        <input type="tel" id="delivery-phone" placeholder="Phone Number" required>
-                        <textarea id="delivery-address" placeholder="Delivery Address (Street, House No.)" rows="2"
-                            required></textarea>
-                        <input type="text" id="delivery-city" placeholder="City / Region" required>
-                    </div>
                     <div class="cart-footer">
                         <div class="total">
                             <span>Total:</span>
@@ -235,6 +227,39 @@
                         </div>
                         <button class="checkout-btn" id="checkout-btn">Complete Purchase</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Modal Overlay -->
+        <div class="delivery-overlay" id="delivery-overlay">
+            <div class="delivery-card">
+                <button class="close-modal" id="close-delivery">×</button>
+                <h2>Delivery Information</h2>
+                <p>Please provide your shipping details to complete the order.</p>
+
+                <div class="delivery-form-grid">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="delivery-name" placeholder="John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="delivery-phone" placeholder="+233 XX XXX XXXX" required>
+                    </div>
+                    <div class="input-group full">
+                        <label>Street Address</label>
+                        <textarea id="delivery-address" placeholder="Enter your full street address and house number"
+                            rows="3" required></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>City / Region</label>
+                        <input type="text" id="delivery-city" placeholder="Accra, Greater Accra" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="proceed-to-payment" class="auth-btn">Proceed to Secure Payment</button>
                 </div>
             </div>
         </div>
