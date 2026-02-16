@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeLaptops | Premium Computer Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="auth-gate" class="auth-overlay">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Luxe<span>Laptops</span></h1>
+                    <p id="auth-msg">Please sign in to access the store</p>
+                </div>
+
+                <div id="login-form-container">
+                    <form id="login-form">
+                        <input type="email" id="login-email" placeholder="Email Address" required>
+                        <input type="password" id="login-pass" placeholder="Password" required>
+                        <button type="submit" class="auth-btn">Sign In</button>
+                    </form>
+                    <p class="auth-switch">Don't have an account? <span id="show-signup">Sign Up</span></p>
+                </div>
+
+                <div id="signup-form-container" style="display: none;">
+                    <form id="signup-form">
+                        <input type="text" id="signup-name" placeholder="Full Name" required>
+                        <input type="email" id="signup-email" placeholder="Email Address" required>
+                        <input type="password" id="signup-pass" placeholder="Password" required>
+                        <button type="submit" class="auth-btn">Create Account</button>
+                    </form>
+                    <p class="auth-switch">Already have an account? <span id="show-login">Login</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-container" id="main-app" style="display: none;">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <h1>Luxe<span>Laptops</span></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li class="nav-link active" data-section="store" data-filter="all">Store Home</li>
+                        <li class="nav-link" data-section="faq">FAQs</li>
+                        <li class="nav-link" data-section="contact">Contact Us</li>
+                    </ul>
+                    <div class="divider">Categories</div>
+                    <ul class="categories-nav">
+                        <li data-section="store" data-filter="Gaming">Gaming</li>
+                        <li data-section="store" data-filter="Professional">Professional</li>
+                        <li data-section="store" data-filter="Business">Business</li>
+                        <li data-section="store" data-filter="Ultrabook">Ultrabooks</li>
+                    </ul>
+                </nav>
+                <div class="cart-summary" id="cart-toggle">
+                    <span>🛒 Cart</span>
+                    <span id="cart-count">0</span>
+                </div>
+                <button id="logout-btn" class="logout-btn">Sign Out</button>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="content">
+                <header>
+                    <div class="search-bar">
+                        <input type="text" id="search-input" placeholder="Search by brand or model...">
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="user-avatar"
+                            alt="User">
+                    </div>
+                </header>
+
+                <!-- Store View -->
+                <div id="store-section" class="content-section active">
+                    <section class="hero">
+                        <div class="hero-text">
+                            <h2>Elevate Your Performance</h2>
+                            <p>Discover the finest collection of high-performance laptops from over 40 top brands.</p>
+                        </div>
+                    </section>
+
+                    <section class="product-grid" id="product-grid">
+                        <!-- Laptops will be injected here -->
+                    </section>
+                </div>
+
+                <!-- FAQ View -->
+                <div id="faq-section" class="content-section">
+                    <h2 class="section-title">Frequently Asked Questions</h2>
+                    <div class="faq-accordion">
+                        <div class="faq-item">
+                            <div class="faq-question">What is your warranty policy? <span class="icon">+</span></div>
+                            <div class="faq-answer">All our laptops come with a 2-year international warranty and 1 year
+                                of accidental damage protection.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Do you offer worldwide shipping? <span class="icon">+</span></div>
+                            <div class="faq-answer">Yes, we ship to over 50 countries globally with premium tracking and
+                                insurance included.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">Can I customize my laptop specs? <span class="icon">+</span></div>
+                            <div class="faq-answer">For select models (like Framework and high-end workstations), we
+                                offer custom configuration services.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">What payment methods do you accept? <span class="icon">+</span>
+                            </div>
+                            <div class="faq-answer">We accept all major credit cards, PayPal, and cryptocurrency for
+                                secure transactions.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact View -->
+                <div id="contact-section" class="content-section">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <div class="contact-container">
+                        <div class="contact-info">
+                            <div class="info-card">
+                                <h3>Store Location</h3>
+                                <p>123 Tech Avenue, Silicon Valley, CA 94025</p>
+                            </div>
+                            <div class="info-card">
+                                <h3>Support Email</h3>
+                                <p>hello@luxelaptops.com</p>
+                            </div>
+                            <div class="info-card">
+                                <h3>Call Us</h3>
+                                <p>+1 (800) 589-3-LAPTOP</p>
+                            </div>
+                        </div>
+                        <form class="contact-form">
+                            <input type="text" placeholder="Your Name" required>
+                            <input type="email" placeholder="Your Email" required>
+                            <textarea placeholder="How can we help you?" rows="5" required></textarea>
+                            <button type="submit" class="auth-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Cart Sidebar -->
+            <div class="cart-overlay" id="cart-overlay">
+                <div class="cart-panel">
+                    <div class="cart-header">
+                        <h3>Your Selection</h3>
+                        <button id="close-cart">✕</button>
+                    </div>
+                    <div class="cart-items" id="cart-items">
+                        <!-- Cart items will be injected here -->
+                    </div>
+                    <div class="cart-footer">
+                        <div class="total">
+                            <span>Total:</span>
+                            <span id="cart-total">$0</span>
+                        </div>
+                        <button class="checkout-btn" id="checkout-btn">Complete Purchase</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+</body>
+
+</html>
