@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.1, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 2499, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 1899, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 1699, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 1599, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
@@ -265,13 +265,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---------------------------------------------------------
-    // 5. FAQ INTERACTIVITY
+    // 5. FAQ & CONTACT INTERACTIVITY
     // ---------------------------------------------------------
     document.querySelectorAll('.faq-item').forEach(item => {
         item.querySelector('.faq-question').onclick = () => {
             item.classList.toggle('active');
         };
     });
+
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector('button');
+            const originalBtnText = submitBtn.innerText;
+
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Thank you! Your message has been sent successfully. We will get back to you soon.');
+                    contactForm.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                console.error('Email Error:', error);
+                alert('Oops! There was a problem sending your message. Please try again or email us directly at narhsnazzisco@gmail.com');
+            } finally {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        };
+    }
 
     // ---------------------------------------------------------
     // 6. STORE & CART LOGIC (REUSED)
@@ -335,11 +371,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
 
+        // Collect Delivery Information
+        const deliveryData = {
+            name: document.getElementById('delivery-name').value,
+            phone: document.getElementById('delivery-phone').value,
+            address: document.getElementById('delivery-address').value,
+            city: document.getElementById('delivery-city').value
+        };
+
+        if (!deliveryData.name || !deliveryData.phone || !deliveryData.address || !deliveryData.city) {
+            return alert('Please fill in all delivery details before completing purchase.');
+        }
+
         // Trigger Paystack Payment Modal
-        payWithPaystack(totalAmount);
+        payWithPaystack(totalAmount, deliveryData);
     };
 
-    function payWithPaystack(amountUSD) {
+    function payWithPaystack(amountUSD, delivery) {
         // Convert USD to GHS for Paystack (if needed for local payment methods like Momo)
         const amountGHS = amountUSD * CONFIG.CONVERSION_RATE_USD_TO_GHS;
         const amountInPesewas = Math.round(amountGHS * 100);
@@ -356,6 +404,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         display_name: "Customer Name",
                         variable_name: "customer_name",
                         value: currentUser.name
+                    },
+                    {
+                        display_name: "Delivery Address",
+                        variable_name: "delivery_address",
+                        value: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`
                     },
                     {
                         display_name: "Cart Summary",
@@ -491,4 +544,3 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
-
