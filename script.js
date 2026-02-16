@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
+    // 0. CONFIGURATION
+    // ---------------------------------------------------------
+    const CONFIG = {
+        PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
+        GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
+        CURRENCY: 'GHS',
+        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
+        STORE_NAME: 'DonaldLaptops'
+    };
+
+    // ---------------------------------------------------------
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
@@ -47,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let cart = [];
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let pendingUser = null; // Used during 2FA verification step
+    let tempSecret = null; // Used during 2FA setup
 
     // ---------------------------------------------------------
     // 2. DOM ELEMENTS
@@ -76,9 +89,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartTotal = document.getElementById('cart-total');
     const checkoutBtn = document.getElementById('checkout-btn');
 
+    // 2FA Elements
+    const tfaFormContainer = document.getElementById('tfa-form-container');
+    const tfaForm = document.getElementById('tfa-form');
+    const tfaCodeInput = document.getElementById('tfa-code');
+    const cancelTfa = document.getElementById('cancel-tfa');
+
+    const enableTfaBtn = document.getElementById('enable-tfa-btn');
+    const tfaSetupWizard = document.getElementById('tfa-setup-wizard');
+    const tfaVerifyCodeInput = document.getElementById('tfa-verify-code');
+    const confirmTfaBtn = document.getElementById('confirm-tfa-btn');
+    const tfaActiveStatus = document.getElementById('tfa-active-status');
+    const disableTfaBtn = document.getElementById('disable-tfa-btn');
+    const qrCodeContainer = document.getElementById('qrcode');
+
     // ---------------------------------------------------------
     // 3. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
+    function initGoogleLogin() {
+        if (typeof google === 'undefined') return;
+
+        google.accounts.id.initialize({
+            client_id: CONFIG.GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById("google-login-btn"),
+            { theme: "outline", size: "large", width: "100%" }
+        );
+    }
+
+    function handleGoogleResponse(response) {
+        // In a real app, you'd send this JWT to your server to verify
+        // For this local demo, we'll decode the JWT payload to get user info
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+        const gUser = {
+            name: payload.name,
+            email: payload.email,
+            avatar: payload.picture
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(gUser));
+        currentUser = gUser;
+        checkAuth();
+    }
+
     function checkAuth() {
         if (currentUser) {
             authGate.style.display = 'none';
@@ -98,8 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showLogin.onclick = () => {
         document.getElementById('signup-form-container').style.display = 'none';
+        document.getElementById('tfa-form-container').style.display = 'none';
         document.getElementById('login-form-container').style.display = 'block';
     };
+
+    cancelTfa.onclick = () => showLogin.onclick();
 
     signupForm.onsubmit = (e) => {
         e.preventDefault();
@@ -108,6 +168,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const pass = document.getElementById('signup-pass').value;
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // OWNER EMAIL PROTECTION RULE
+        const sanitizedEmail = email.trim().toLowerCase();
+        console.log("Signup Attempt:", sanitizedEmail); // Debugging
+        if (sanitizedEmail === 'narhsnazzisco@gmail.com') {
+            alert('CRITICAL SECURITY ALERT: This email address (narhsnazzisco@gmail.com) is reserved for the store owner and cannot be used to create new accounts.');
+            return;
+        }
+
         if (users.find(u => u.email === email)) return alert('Email already registered!');
 
         const newUser = { name, email, pass };
@@ -124,14 +193,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const pass = document.getElementById('login-pass').value;
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Block owner email from logging in via public form if needed (Optional security)
+        if (email.trim().toLowerCase() === 'narhsnazzisco@gmail.com') {
+            return alert('Access Denied: The administrator email cannot be used via this form.');
+        }
+
         const user = users.find(u => u.email === email && u.pass === pass);
 
         if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUser = user;
-            checkAuth();
+            if (user.tfaEnabled) {
+                pendingUser = user;
+                document.getElementById('login-form-container').style.display = 'none';
+                tfaFormContainer.style.display = 'block';
+            } else {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                currentUser = user;
+                checkAuth();
+            }
         } else {
             alert('Invalid email or password!');
+        }
+    };
+
+    tfaForm.onsubmit = (e) => {
+        e.preventDefault();
+        const code = tfaCodeInput.value;
+        if (verifyOTP(pendingUser.tfaSecret, code)) {
+            localStorage.setItem('currentUser', JSON.stringify(pendingUser));
+            currentUser = pendingUser;
+            pendingUser = null;
+            tfaCodeInput.value = '';
+            checkAuth();
+        } else {
+            alert('Invalid 2FA code. Please try again.');
         }
     };
 
@@ -163,6 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     renderProducts(laptops.filter(l => l.category === filter));
                 }
+            } else if (sectionId === 'settings') {
+                updateSettingsUI();
             }
         };
     });
@@ -235,12 +332,162 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCart.onclick = () => cartOverlay.classList.remove('active');
     checkoutBtn.onclick = () => {
         if (cart.length === 0) return alert('Cart is empty!');
-        alert('Purchase successful! Thank you.');
-        cart = [];
-        updateCart();
-        cartOverlay.classList.remove('active');
+
+        const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+
+        // Trigger Paystack Payment Modal
+        payWithPaystack(totalAmount);
+    };
+
+    function payWithPaystack(amountUSD) {
+        // Convert USD to GHS for Paystack (if needed for local payment methods like Momo)
+        const amountGHS = amountUSD * CONFIG.CONVERSION_RATE_USD_TO_GHS;
+        const amountInPesewas = Math.round(amountGHS * 100);
+
+        let handler = PaystackPop.setup({
+            key: CONFIG.PAYSTACK_PUBLIC_KEY,
+            email: currentUser.email,
+            amount: amountInPesewas,
+            currency: CONFIG.CURRENCY,
+            ref: 'LUXE-' + Math.floor((Math.random() * 1000000000) + 1),
+            metadata: {
+                custom_fields: [
+                    {
+                        display_name: "Customer Name",
+                        variable_name: "customer_name",
+                        value: currentUser.name
+                    },
+                    {
+                        display_name: "Cart Summary",
+                        variable_name: "cart_summary",
+                        value: cart.map(item => item.name).join(', ')
+                    }
+                ]
+            },
+            callback: function (response) {
+                alert(`Payment Success! Reference: ${response.reference}\n\nThank you for choosing ${CONFIG.STORE_NAME}!`);
+                cart = [];
+                updateCart();
+                cartOverlay.classList.remove('active');
+            },
+            onClose: function () {
+                alert('Payment was not completed. You can try again from your cart.');
+            }
+        });
+        handler.openIframe();
+    }
+
+    // ---------------------------------------------------------
+    // 7. 2FA CORE LOGIC
+    // ---------------------------------------------------------
+    function generateSecret() {
+        // Generate a random 20-character base32 secret
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        let secret = '';
+        for (let i = 0; i < 20; i++) {
+            secret += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        }
+        return secret;
+    }
+
+    function verifyOTP(secret, code) {
+        try {
+            const totp = new OTPAuth.TOTP({
+                issuer: CONFIG.STORE_NAME,
+                label: currentUser ? currentUser.email : (pendingUser ? pendingUser.email : 'User'),
+                algorithm: 'SHA1',
+                digits: 6,
+                period: 30,
+                secret: secret
+            });
+            const delta = totp.validate({ token: code, window: 1 });
+            return delta !== null;
+        } catch (err) {
+            console.error('TOTP Error:', err);
+            return false;
+        }
+    }
+
+    function updateSettingsUI() {
+        if (!currentUser) return;
+
+        if (currentUser.tfaEnabled) {
+            document.getElementById('tfa-setup-area').style.display = 'none';
+            tfaSetupWizard.style.display = 'none';
+            tfaActiveStatus.style.display = 'block';
+        } else {
+            document.getElementById('tfa-setup-area').style.display = 'block';
+            tfaSetupWizard.style.display = 'none';
+            tfaActiveStatus.style.display = 'none';
+        }
+    }
+
+    enableTfaBtn.onclick = () => {
+        tempSecret = generateSecret();
+        qrCodeContainer.innerHTML = '';
+
+        const totp = new OTPAuth.TOTP({
+            issuer: CONFIG.STORE_NAME,
+            label: currentUser.email,
+            algorithm: 'SHA1',
+            digits: 6,
+            period: 30,
+            secret: tempSecret
+        });
+
+        new QRCode(qrCodeContainer, {
+            text: totp.toString(),
+            width: 160,
+            height: 160
+        });
+
+        document.getElementById('tfa-setup-area').style.display = 'none';
+        tfaSetupWizard.style.display = 'block';
+    };
+
+    confirmTfaBtn.onclick = () => {
+        const code = tfaVerifyCodeInput.value;
+        if (verifyOTP(tempSecret, code)) {
+            currentUser.tfaEnabled = true;
+            currentUser.tfaSecret = tempSecret;
+
+            // Persist to users list
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index !== -1) {
+                users[index] = currentUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            alert('Two-Factor Authentication is now active!');
+            tempSecret = null;
+            tfaVerifyCodeInput.value = '';
+            updateSettingsUI();
+        } else {
+            alert('Invalid code. Please try again.');
+        }
+    };
+
+    disableTfaBtn.onclick = () => {
+        if (confirm('Are you sure you want to disable 2FA? This will make your account less secure.')) {
+            currentUser.tfaEnabled = false;
+            currentUser.tfaSecret = null;
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index !== -1) {
+                users[index] = currentUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateSettingsUI();
+            alert('2FA has been disabled.');
+        }
     };
 
     // Initial check
     checkAuth();
+    initGoogleLogin();
 });
