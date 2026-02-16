@@ -103,6 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const disableTfaBtn = document.getElementById('disable-tfa-btn');
     const qrCodeContainer = document.getElementById('qrcode');
 
+    // Delivery Modal Elements
+    const deliveryOverlay = document.getElementById('delivery-overlay');
+    const closeDelivery = document.getElementById('close-delivery');
+    const proceedToPaymentBtn = document.getElementById('proceed-to-payment');
+
+    // Delivery Inputs
+    const deliveryNameInput = document.getElementById('delivery-name');
+    const deliveryPhoneInput = document.getElementById('delivery-phone');
+    const deliveryAddressInput = document.getElementById('delivery-address');
+    const deliveryCityInput = document.getElementById('delivery-city');
+
     // ---------------------------------------------------------
     // 3. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
@@ -369,18 +380,26 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutBtn.onclick = () => {
         if (cart.length === 0) return alert('Cart is empty!');
 
+        // Hide cart and show delivery modal
+        cartOverlay.classList.remove('active');
+        deliveryOverlay.classList.add('active');
+    };
+
+    closeDelivery.onclick = () => deliveryOverlay.classList.remove('active');
+
+    proceedToPaymentBtn.onclick = () => {
         const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
 
         // Collect Delivery Information
         const deliveryData = {
-            name: document.getElementById('delivery-name').value,
-            phone: document.getElementById('delivery-phone').value,
-            address: document.getElementById('delivery-address').value,
-            city: document.getElementById('delivery-city').value
+            name: deliveryNameInput.value,
+            phone: deliveryPhoneInput.value,
+            address: deliveryAddressInput.value,
+            city: deliveryCityInput.value
         };
 
         if (!deliveryData.name || !deliveryData.phone || !deliveryData.address || !deliveryData.city) {
-            return alert('Please fill in all delivery details before completing purchase.');
+            return alert('Please fill in all delivery details before proceeding to payment.');
         }
 
         // Trigger Paystack Payment Modal
@@ -421,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(`Payment Success! Reference: ${response.reference}\n\nThank you for choosing ${CONFIG.STORE_NAME}!`);
                 cart = [];
                 updateCart();
-                cartOverlay.classList.remove('active');
+                deliveryOverlay.classList.remove('active');
             },
             onClose: function () {
                 alert('Payment was not completed. You can try again from your cart.');
