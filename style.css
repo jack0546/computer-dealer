@@ -462,6 +462,57 @@ header {
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
+    margin-top: 1rem;
+}
+
+.delivery-info-form {
+    padding: 1.5rem;
+    background: var(--glass);
+    border-radius: 20px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.delivery-info-form h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+    font-family: 'Playfair Display', serif;
+}
+
+.delivery-info-form input,
+.delivery-info-form textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.delivery-info-form textarea {
+    height: 80px;
+    resize: none;
+}
+
+.delivery-info-form input:focus,
+.delivery-info-form textarea:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.delivery-info-form input::placeholder,
+.delivery-info-form textarea::placeholder {
+    color: var(--text-muted);
+    font-size: 0.95rem;
 }
 
 /* Responsive */
