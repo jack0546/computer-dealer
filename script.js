@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 2499, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 1, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 1899, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 1699, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 1599, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
@@ -544,3 +544,4 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
+
