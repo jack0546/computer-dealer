@@ -113,6 +113,24 @@ body {
 .app-container {
     display: flex;
     min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 1100;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: var(--shadow);
 }
 
 .sidebar {
@@ -206,7 +224,8 @@ nav li.active {
 /* Main Content Styling */
 .content {
     flex: 1;
-    padding: 2rem 4rem;
+    padding: 2rem;
+    max-width: 100%;
 }
 
 header {
@@ -613,18 +632,86 @@ header {
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .contact-container {
-        grid-template-columns: 1fr;
+    .content {
+        padding: 1.5rem;
     }
 
     .sidebar {
         width: 80px;
     }
 
-    .logo h1,
-    nav .divider,
-    .logout-btn span,
-    .nav-link span {
+    .sidebar .logo h1,
+    .sidebar .divider,
+    .sidebar nav li span,
+    .sidebar .logout-btn span {
         display: none;
+    }
+
+    .sidebar nav li.active {
+        padding-left: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        width: 280px;
+        z-index: 1000;
+        transition: 0.3s ease;
+    }
+
+    .sidebar.active {
+        left: 0;
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar .logo h1,
+    .sidebar .divider,
+    .sidebar nav li span,
+    .sidebar .logout-btn span {
+        display: block;
+    }
+
+    .content {
+        padding: 5rem 1rem 2rem 1rem;
+    }
+
+    .hero {
+        padding: 2rem;
+        border-radius: 20px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .card img {
+        height: 140px;
+    }
+
+    .card .price {
+        font-size: 1.1rem;
+    }
+
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-panel {
+        width: 100%;
     }
 }
