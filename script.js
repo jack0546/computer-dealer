@@ -130,10 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
             callback: handleGoogleResponse
         });
 
-        google.accounts.id.renderButton(
-            document.getElementById("google-login-btn"),
-            { theme: "outline", size: "large", width: "100%" }
-        );
+        const customGoogleBtn = document.getElementById('custom-google-btn');
+        if (customGoogleBtn) {
+            customGoogleBtn.onclick = () => {
+                google.accounts.id.prompt(); // Triggers the Google One Tap / Account Selector
+            };
+        }
     }
 
     function handleGoogleResponse(response) {
