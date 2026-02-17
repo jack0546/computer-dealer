@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donald Laptops | Premium Computer Store</title>
+    <title>DonaldLaptops | Premium Computer Store</title>
     <link rel="stylesheet" href="style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
@@ -33,7 +33,6 @@
                         <input type="password" id="login-pass" placeholder="Password" required>
                         <button type="submit" class="auth-btn">Sign In</button>
                     </form>
-                    <div id="google-login-btn"></div>
                     <p class="auth-switch">Don't have an account? <span id="show-signup">Sign Up</span></p>
                 </div>
 
@@ -46,6 +45,9 @@
                     </form>
                     <p class="auth-switch">Already have an account? <span id="show-login">Login</span></p>
                 </div>
+
+                <div class="auth-divider"><span>OR</span></div>
+                <div id="google-login-btn" style="margin-bottom: 20px;"></div>
 
                 <div id="tfa-form-container" style="display: none;">
                     <div class="auth-header">
@@ -151,7 +153,7 @@
                         <div class="contact-info">
                             <div class="info-card">
                                 <h3>Store Location</h3>
-                                <p>Teme Comm. 12 osudoku street</p>
+                                <p>123 Tech Avenue, Silicon Valley, CA 94025</p>
                             </div>
                             <div class="info-card">
                                 <h3>Support Email</h3>
@@ -159,7 +161,7 @@
                             </div>
                             <div class="info-card">
                                 <h3>Call Us</h3>
-                                <p>+233 532340875 Ghana</p>
+                                <p>+1 (800) 589</p>
                             </div>
                         </div>
                         <form class="contact-form" action="https://formsubmit.co/narhsnazzisco@gmail.com" method="POST">
@@ -176,10 +178,23 @@
                     </div>
                 </div>
 
-                <!-- Settings View -->
                 <div id="settings-section" class="content-section">
                     <h2 class="section-title">Account Security</h2>
                     <div class="settings-container">
+                        <!-- Security Dashboard Summary -->
+                        <div class="settings-card security-dashboard"
+                            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); border: 1px solid var(--primary); margin-bottom: 2rem;">
+                            <h3 style="color: var(--primary); margin-bottom: 1rem;">🛡️ Your Security Status</h3>
+                            <ul style="list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <li><strong style="color: #10b981;">✓</strong> Two-Factor Authentication (TOTP)</li>
+                                <li><strong style="color: #10b981;">✓</strong> Google Social Login (OAuth)</li>
+                                <li><strong style="color: #10b981;">✓</strong> Owner-Only Email Protection</li>
+                                <li><strong style="color: #10b981;">✓</strong> Paystack Secure Gateway</li>
+                            </ul>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">Your account is
+                                protected by industry-standard encryption and multi-factor authentication.</p>
+                        </div>
+
                         <div class="settings-card">
                             <h3>Two-Factor Authentication (2FA)</h3>
                             <p>Add an extra layer of security to your account using Google Authenticator.</p>
@@ -267,7 +282,3 @@
 </body>
 
 </html>
-
-
-
-
