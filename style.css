@@ -109,6 +109,23 @@ body {
     font-weight: 600;
 }
 
+.auth-footer-links {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.auth-footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.auth-footer-links a:hover {
+    color: var(--primary);
+}
+
 .google-auth-btn {
     width: 100%;
     padding: 0.8rem;
@@ -205,6 +222,19 @@ body {
 
 .logo span {
     color: var(--primary);
+}
+
+.privacy-sidebar-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.privacy-sidebar-link:hover {
+    color: var(--text);
 }
 
 .divider {
