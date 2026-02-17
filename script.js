@@ -6,28 +6,28 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'DonaldLaptops'
+        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
+        STORE_NAME: 'Logo Maker'
     };
 
     // ---------------------------------------------------------
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.01, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.2, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 0.01, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
         { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
+        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 0.01, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creator" },
-        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
+        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
         { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
         { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
@@ -53,13 +53,44 @@ document.addEventListener('DOMContentLoaded', () => {
         { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 0.01, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Linux" },
         { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 0.01, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" }
+        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
+        // Expanded Inventory
+        ...Array.from({ length: 150 }, (_, i) => {
+            const id = i + 41;
+            const brands = ["Apple", "Dell", "HP", "Lenovo", "ASUS", "Acer", "MSI", "Razer", "Microsoft", "Samsung"];
+            const categories = ["Gaming", "Professional", "Business", "Ultrabook", "Budget", "Student", "Creative", "Workstation"];
+            const workingImageIds = [
+                "1517336714731-489689fd1ca8",
+                "1593642632823-8f785ba67e45",
+                "1541807084-5c52b6b3adef",
+                "1525547719571-a2d4ac8945e2",
+                "1544244015-0df4b3ffc6b0",
+                "1550745165-9bc0b252726f",
+                "1496181133206-80ce9b88a853",
+                "1588872657578-7efd1f1555ed",
+                "1603302576837-37561b2e2302"
+            ];
+            const brand = brands[id % brands.length];
+            const category = categories[id % categories.length];
+            const imageId = workingImageIds[id % workingImageIds.length];
+            const price = 0.01;
+            return {
+                id,
+                name: `${brand} ${category} Elite ${id}`,
+                brand,
+                price,
+                specs: `High Performance ${category} Specs, ${16 + (id % 32)}GB RAM, ${256 * (1 + (id % 4))}GB SSD`,
+                image: `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=80&w=400`,
+                category
+            };
+        })
     ];
 
     let cart = [];
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
     let pendingUser = null; // Used during 2FA verification step
     let tempSecret = null; // Used during 2FA setup
+    let pendingCheckout = false; // NEW: Track if login was triggered by checkout
 
     // ---------------------------------------------------------
     // 2. DOM ELEMENTS
@@ -72,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLogin = document.getElementById('show-login');
     const logoutBtn = document.getElementById('logout-btn');
     const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
+    const navMenu = document.getElementById('nav-menu');
 
     // Sections
     const sections = document.querySelectorAll('.content-section');
@@ -120,22 +151,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
     menuToggle.onclick = () => {
-        sidebar.classList.toggle('active');
+        navMenu.classList.toggle('active');
     };
     function initGoogleLogin() {
-        if (typeof google === 'undefined') return;
+        if (typeof google === 'undefined') {
+            setTimeout(initGoogleLogin, 500); // SDK not ready, retry
+            return;
+        }
 
         google.accounts.id.initialize({
             client_id: CONFIG.GOOGLE_CLIENT_ID,
-            callback: handleGoogleResponse
+            callback: handleGoogleResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true
         });
 
-        const customGoogleBtn = document.getElementById('custom-google-btn');
-        if (customGoogleBtn) {
-            customGoogleBtn.onclick = () => {
-                google.accounts.id.prompt(); // Triggers the Google One Tap / Account Selector
-            };
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        if (googleLoginBtn) {
+            google.accounts.id.renderButton(
+                googleLoginBtn,
+                {
+                    theme: "outline",
+                    size: "large",
+                    width: "100%",
+                    text: "signup_with",
+                    shape: "pill"
+                }
+            );
         }
+        google.accounts.id.prompt();
     }
 
     function handleGoogleResponse(response) {
@@ -147,7 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: payload.name,
             email: payload.email.toLowerCase(),
             avatar: payload.picture,
-            googleUser: true // Mark as a Google-integrated user
+            googleUser: true, // Mark as a Google-integrated user
+            lastLogin: new Date().toISOString() // Track last login
         };
 
         // Persistent Signup Logic (Automatic Registration)
@@ -155,17 +200,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingUser = users.find(u => u.email === gUser.email);
 
         if (!existingUser) {
-            // First time visit - register the user
+            // First time visit - register the user with signup date
+            gUser.signupDate = new Date().toISOString();
             users.push(gUser);
             localStorage.setItem('users', JSON.stringify(users));
-            console.log("New User Registered via Google:", gUser.email);
+            console.log("New User Registered via Google:", gUser.email, "on", gUser.signupDate);
         } else {
-            // Returning user - update their profile if needed (keep existing settings like 2FA)
+            // Returning user - update their profile and last login
             const index = users.findIndex(u => u.email === gUser.email);
-            users[index] = { ...users[index], ...gUser };
+            users[index] = { ...users[index], ...gUser, signupDate: users[index].signupDate }; // Preserve original signup date
             localStorage.setItem('users', JSON.stringify(users));
             // Use the data from high-security storage (existing user records)
             currentUser = users[index];
+            console.log("User logged in via Google:", currentUser.email, "Last login:", currentUser.lastLogin);
         }
 
         localStorage.setItem('currentUser', JSON.stringify(currentUser || gUser));
@@ -174,17 +221,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkAuth() {
+        const userFullName = document.getElementById('user-full-name');
+        const loginBtn = document.getElementById('login-btn');
         if (currentUser) {
             authGate.style.display = 'none';
             mainApp.style.display = 'flex';
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
+            if (userFullName) userFullName.textContent = currentUser.name;
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
+            document.getElementById('user-avatar').src = currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
             renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
+
+            // If user logged in during checkout, resume checkout
+            if (pendingCheckout) {
+                pendingCheckout = false;
+                checkoutBtn.onclick();
+            }
         } else {
-            authGate.style.display = 'flex';
-            mainApp.style.display = 'none';
-            clearTimeout(inactivityTimer); // Stop tracking if logged out
+            // Keep store visible for guests, but hide certain features
+            authGate.style.display = 'none';
+            mainApp.style.display = 'flex';
+            if (userFullName) userFullName.textContent = 'Guest';
+            if (loginBtn) loginBtn.style.display = 'block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
+            renderProducts(laptops);
+            clearTimeout(inactivityTimer);
         }
+    }
+
+    if (document.getElementById('login-btn')) {
+        document.getElementById('login-btn').onclick = () => {
+            authGate.style.display = 'flex';
+        };
     }
 
     showSignup.onclick = () => {
@@ -218,11 +288,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (users.find(u => u.email === email)) return alert('Email already registered!');
 
-        const newUser = { name, email, pass };
+        const newUser = {
+            name,
+            email,
+            pass,
+            signupDate: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
+        };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         currentUser = newUser;
+        console.log("New User Registered:", newUser.email, "on", newUser.signupDate);
         checkAuth();
     };
 
@@ -241,6 +318,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = users.find(u => u.email === email && u.pass === pass);
 
         if (user) {
+            // Update last login time
+            user.lastLogin = new Date().toISOString();
+            const userIndex = users.findIndex(u => u.email === email);
+            users[userIndex] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+
             if (user.tfaEnabled) {
                 pendingUser = user;
                 document.getElementById('login-form-container').style.display = 'none';
@@ -248,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 currentUser = user;
+                console.log("User logged in:", user.email, "Last login:", user.lastLogin);
                 checkAuth();
             }
         } else {
@@ -328,11 +412,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateSettingsUI();
             }
 
-            // Close sidebar on mobile after clicking
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
-            }
+            // Close menu after clicking a link
+            navMenu.classList.remove('active');
         };
+    });
+
+    // Close menu when clicking outside
+    window.addEventListener('click', (e) => {
+        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
     });
 
     // ---------------------------------------------------------
@@ -439,6 +528,14 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCart.onclick = () => cartOverlay.classList.remove('active');
     checkoutBtn.onclick = () => {
         if (cart.length === 0) return alert('Cart is empty!');
+
+        // Check for authentication
+        if (!currentUser) {
+            pendingCheckout = true;
+            cartOverlay.classList.remove('active');
+            authGate.style.display = 'flex';
+            return;
+        }
 
         // Hide cart and show delivery modal
         cartOverlay.classList.remove('active');
