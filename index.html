@@ -66,30 +66,31 @@
 
         <div class="app-container" id="main-app" style="display: none;">
             <!-- Sidebar Navigation -->
-            <aside class="sidebar">
+            <button id="menu-toggle" class="menu-toggle">☰</button>
+            <aside class="sidebar" id="sidebar">
                 <div class="logo">
                     <h1>Donald<span>Laptops</span></h1>
                 </div>
                 <nav>
                     <ul>
-                        <li class="nav-link active" data-section="store" data-filter="all">Store Home</li>
-                        <li class="nav-link" data-section="faq">FAQs</li>
-                        <li class="nav-link" data-section="contact">Contact Us</li>
-                        <li class="nav-link" data-section="settings">Account Security</li>
+                        <li class="nav-link active" data-section="store" data-filter="all"><span>Store Home</span></li>
+                        <li class="nav-link" data-section="faq"><span>FAQs</span></li>
+                        <li class="nav-link" data-section="contact"><span>Contact Us</span></li>
+                        <li class="nav-link" data-section="settings"><span>Account Security</span></li>
                     </ul>
-                    <div class="divider">Categories</div>
+                    <div class="divider"><span>Categories</span></div>
                     <ul class="categories-nav">
-                        <li data-section="store" data-filter="Gaming">Gaming</li>
-                        <li data-section="store" data-filter="Professional">Professional</li>
-                        <li data-section="store" data-filter="Business">Business</li>
-                        <li data-section="store" data-filter="Ultrabook">Ultrabooks</li>
+                        <li data-section="store" data-filter="Gaming"><span>Gaming</span></li>
+                        <li data-section="store" data-filter="Professional"><span>Professional</span></li>
+                        <li data-section="store" data-filter="Business"><span>Business</span></li>
+                        <li data-section="store" data-filter="Ultrabook"><span>Ultrabooks</span></li>
                     </ul>
                 </nav>
                 <div class="cart-summary" id="cart-toggle">
                     <span>🛒 Cart</span>
                     <span id="cart-count">0</span>
                 </div>
-                <button id="logout-btn" class="logout-btn">Sign Out</button>
+                <button id="logout-btn" class="logout-btn"><span>Sign Out</span></button>
             </aside>
 
             <!-- Main Content -->
@@ -153,7 +154,7 @@
                         <div class="contact-info">
                             <div class="info-card">
                                 <h3>Store Location</h3>
-                                <p>123 Tech Avenue, Silicon Valley, CA 94025</p>
+                                <p>Tema Comm. 12 New Way street</p>
                             </div>
                             <div class="info-card">
                                 <h3>Support Email</h3>
@@ -161,7 +162,7 @@
                             </div>
                             <div class="info-card">
                                 <h3>Call Us</h3>
-                                <p>+1 (800) 589</p>
+                                <p>+233 532340875</p>
                             </div>
                         </div>
                         <form class="contact-form" action="https://formsubmit.co/narhsnazzisco@gmail.com" method="POST">
