@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
+        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
         STORE_NAME: 'DonaldLaptops'
     };
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 1, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.01, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 1899, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 1699, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 1599, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
@@ -138,12 +138,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const gUser = {
             name: payload.name,
-            email: payload.email,
-            avatar: payload.picture
+            email: payload.email.toLowerCase(),
+            avatar: payload.picture,
+            googleUser: true // Mark as a Google-integrated user
         };
 
-        localStorage.setItem('currentUser', JSON.stringify(gUser));
-        currentUser = gUser;
+        // Persistent Signup Logic (Automatic Registration)
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const existingUser = users.find(u => u.email === gUser.email);
+
+        if (!existingUser) {
+            // First time visit - register the user
+            users.push(gUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            console.log("New User Registered via Google:", gUser.email);
+        } else {
+            // Returning user - update their profile if needed (keep existing settings like 2FA)
+            const index = users.findIndex(u => u.email === gUser.email);
+            users[index] = { ...users[index], ...gUser };
+            localStorage.setItem('users', JSON.stringify(users));
+            // Use the data from high-security storage (existing user records)
+            currentUser = users[index];
+        }
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser || gUser));
+        currentUser = currentUser || gUser;
         checkAuth();
     }
 
@@ -153,9 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
             mainApp.style.display = 'flex';
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
             renderProducts(laptops);
+            resetInactivityTimer(); // Start tracking inactivity
         } else {
             authGate.style.display = 'flex';
             mainApp.style.display = 'none';
+            clearTimeout(inactivityTimer); // Stop tracking if logged out
         }
     }
 
@@ -241,11 +262,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    logoutBtn.onclick = () => {
+    // ---------------------------------------------------------
+    // SESSION TIMEOUT (IDLE LOGOUT)
+    // ---------------------------------------------------------
+    let inactivityTimer;
+    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 minutes
+
+    function resetInactivityTimer() {
+        if (!currentUser) return;
+
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+            handleLogout(true); // Argument true indicates a timeout
+        }, INACTIVITY_LIMIT);
+    }
+
+    function handleLogout(isTimeout = false) {
         localStorage.removeItem('currentUser');
         currentUser = null;
+        clearTimeout(inactivityTimer);
         checkAuth();
-    };
+
+        if (isTimeout) {
+            alert('Your session has timed out due to 10 minutes of inactivity for security.');
+        }
+    }
+
+    // Event listeners to reset the timer on user activity
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
+        window.addEventListener(event, resetInactivityTimer);
+    });
+
+    logoutBtn.onclick = () => handleLogout(false);
 
     // ---------------------------------------------------------
     // 4. NAVIGATION LOGIC
@@ -416,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
             email: currentUser.email,
             amount: amountInPesewas,
             currency: CONFIG.CURRENCY,
-            ref: 'LUXE-' + Math.floor((Math.random() * 1000000000) + 1),
+            ref: 'DONALD-' + Math.floor((Math.random() * 1000000000) + 1),
             metadata: {
                 custom_fields: [
                     {
@@ -433,6 +481,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         display_name: "Cart Summary",
                         variable_name: "cart_summary",
                         value: cart.map(item => item.name).join(', ')
+                    },
+                    {
+                        display_name: "Payout Account",
+                        variable_name: "payout_account",
+                        value: "2061250008399"
                     }
                 ]
             },
@@ -563,4 +616,3 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
-
