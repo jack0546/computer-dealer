@@ -109,6 +109,56 @@ body {
     font-weight: 600;
 }
 
+.google-auth-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: white;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+}
+
+.google-auth-btn:hover {
+    background: #f8f9fa;
+    border-color: #d2e3fc;
+    box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.google-auth-btn svg {
+    display: block;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+
+.auth-divider span {
+    padding: 0 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
 /* Sidebar Styling */
 .app-container {
     display: flex;
