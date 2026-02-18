@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 1000, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.2, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 0.01, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Store elements
     const productGrid = document.getElementById('product-grid');
-    const searchInput = document.getElementById('search-input');
+    const searchInputs = document.querySelectorAll('#search-input, .search-input-field');
 
     // Cart elements
     const cartToggle = document.getElementById('cart-toggle');
@@ -147,13 +147,117 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryAddressInput = document.getElementById('delivery-address');
     const deliveryCityInput = document.getElementById('delivery-city');
 
+    // Password strength elements
+    const signupPassInput = document.getElementById('signup-pass');
+    const passwordStrengthDiv = document.getElementById('password-strength');
+    const strengthText = document.getElementById('strength-text');
+
     // ---------------------------------------------------------
-    // 3. AUTHENTICATION LOGIC
+    // 3. PASSWORD VALIDATION
+    // ---------------------------------------------------------
+    function validatePasswordStrength(password) {
+        const minLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialChar = /[@$!%*?&]/.test(password);
+
+        const strength = [minLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
+
+        return {
+            strength,
+            minLength,
+            hasUpperCase,
+            hasLowerCase,
+            hasNumber,
+            hasSpecialChar,
+            isValid: strength === 5
+        };
+    }
+
+    // Real-time password strength indicator
+    if (signupPassInput) {
+        signupPassInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            if (password.length === 0) {
+                passwordStrengthDiv.style.display = 'none';
+                return;
+            }
+
+            passwordStrengthDiv.style.display = 'block';
+            const validation = validatePasswordStrength(password);
+
+            let strengthLabel = '';
+            let color = '';
+
+            if (validation.strength <= 2) {
+                strengthLabel = '❌ Weak - Add uppercase, numbers & special characters';
+                color = '#ef4444';
+            } else if (validation.strength === 3) {
+                strengthLabel = '⚠️ Fair - Add more variety';
+                color = '#f59e0b';
+            } else if (validation.strength === 4) {
+                strengthLabel = '✓ Good - Almost there!';
+                color = '#3b82f6';
+            } else {
+                strengthLabel = '✅ Strong - Perfect!';
+                color = '#10b981';
+            }
+
+            strengthText.textContent = strengthLabel;
+            strengthText.style.color = color;
+        });
+    }
+
+    // ---------------------------------------------------------
+    // 4. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
     menuToggle.onclick = () => {
         navMenu.classList.toggle('active');
     };
     function initGoogleLogin() {
+        // DETECT LOCAL FILE PROTOCOL TO FIX OAUTH ERROR
+        if (window.location.protocol === 'file:') {
+            console.log("Running locally: Enabling Mock Google Login");
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            if (googleLoginBtn) {
+                googleLoginBtn.innerHTML = `
+                    <button type="button" id="mock-google-btn" style="
+                        display: flex; align-items: center; justify-content: center; width: 100%; 
+                        padding: 10px; background: white; color: #3c4043; border: 1px solid #dadce0; 
+                        border-radius: 20px; font-family: 'Google Sans', arial, sans-serif; font-weight: 500; 
+                        cursor: pointer; font-size: 14px; transition: background 0.2s;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
+                             style="width: 18px; height: 18px; margin-right: 10px;">
+                        Sign in with Google (Dev Mode)
+                    </button>
+                    <p style="text-align: center; font-size: 0.75rem; color: #ef4444; margin-top: 5px;">
+                        *Local file detected: Using simulated login to bypass OAuth errors
+                    </p>
+                `;
+
+                document.getElementById('mock-google-btn').onclick = () => {
+                    const mockEmail = prompt("Enter a test email for Google Login:", "test-user@gmail.com");
+                    if (!mockEmail) return;
+
+                    // Create a fake JWT payload to simulate Google response
+                    const mockPayload = {
+                        name: "Google User (Dev)",
+                        email: mockEmail,
+                        picture: `https://ui-avatars.com/api/?name=Google+User&background=random`,
+                        exp: Math.floor(Date.now() / 1000) + 3600
+                    };
+
+                    // JSON -> String -> Base64 to mimic JWT part 2
+                    const cleanBase64 = btoa(JSON.stringify(mockPayload));
+                    const mockCredential = `header.${cleanBase64}.signature`;
+
+                    handleGoogleResponse({ credential: mockCredential });
+                };
+            }
+            return;
+        }
+
         if (typeof google === 'undefined') {
             setTimeout(initGoogleLogin, 500); // SDK not ready, retry
             return;
@@ -223,12 +327,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkAuth() {
         const userFullName = document.getElementById('user-full-name');
         const loginBtn = document.getElementById('login-btn');
+        const mobileLoginLinks = document.querySelectorAll('.auth-link-login');
+        const mobileLogoutLinks = document.querySelectorAll('.auth-link-logout');
+
         if (currentUser) {
             authGate.style.display = 'none';
             mainApp.style.display = 'flex';
             if (userFullName) userFullName.textContent = currentUser.name;
             if (loginBtn) loginBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'block';
+
+            // Mobile Nav Updates
+            mobileLoginLinks.forEach(el => el.style.display = 'none');
+            mobileLogoutLinks.forEach(el => el.style.display = 'block');
+
             document.getElementById('user-avatar').src = currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
             renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
@@ -245,6 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userFullName) userFullName.textContent = 'Guest';
             if (loginBtn) loginBtn.style.display = 'block';
             if (logoutBtn) logoutBtn.style.display = 'none';
+
+            // Mobile Nav Updates
+            mobileLoginLinks.forEach(el => el.style.display = 'block');
+            mobileLogoutLinks.forEach(el => el.style.display = 'none');
+
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
             renderProducts(laptops);
             clearTimeout(inactivityTimer);
@@ -272,21 +389,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     signupForm.onsubmit = (e) => {
         e.preventDefault();
-        const name = document.getElementById('signup-name').value;
-        const email = document.getElementById('signup-email').value;
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim().toLowerCase();
         const pass = document.getElementById('signup-pass').value;
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
+        // Validate password strength
+        const passwordValidation = validatePasswordStrength(pass);
+        if (!passwordValidation.isValid) {
+            let missing = [];
+            if (!passwordValidation.minLength) missing.push('at least 8 characters');
+            if (!passwordValidation.hasUpperCase) missing.push('uppercase letter');
+            if (!passwordValidation.hasLowerCase) missing.push('lowercase letter');
+            if (!passwordValidation.hasNumber) missing.push('number');
+            if (!passwordValidation.hasSpecialChar) missing.push('special character (@$!%*?&)');
 
-        // OWNER EMAIL PROTECTION RULE
-        const sanitizedEmail = email.trim().toLowerCase();
-        console.log("Signup Attempt:", sanitizedEmail); // Debugging
-        if (sanitizedEmail === 'narhsnazzisco@gmail.com') {
-            alert('CRITICAL SECURITY ALERT: This email address (narhsnazzisco@gmail.com) is reserved for the store owner and cannot be used to create new accounts.');
+            alert(`❌ Password is too weak!\n\nYour password must include:\n• ${missing.join('\n• ')}\n\nPlease create a stronger password.`);
             return;
         }
 
-        if (users.find(u => u.email === email)) return alert('Email already registered!');
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // CHECK FOR DUPLICATE EMAIL (ONE-TIME REGISTRATION)
+        const existingUser = users.find(u => u.email.toLowerCase() === email);
+        if (existingUser) {
+            alert(`⚠️ EMAIL ALREADY REGISTERED\n\nThe email "${email}" is already associated with an account.\n\nPlease:\n• Login with your existing account, or\n• Use a different email address to create a new account`);
+            return;
+        }
+
+        // Validate name (letters and spaces only)
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            alert('❌ Invalid Name\n\nPlease enter a valid name using only letters and spaces.');
+            return;
+        }
 
         const newUser = {
             name,
@@ -299,7 +433,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         currentUser = newUser;
-        console.log("New User Registered:", newUser.email, "on", newUser.signupDate);
+        console.log("✅ New User Registered:", newUser.email, "on", newUser.signupDate);
+        alert(`🎉 Account Created Successfully!\n\nWelcome, ${newUser.name}!\nYour account has been created.`);
         checkAuth();
     };
 
@@ -309,11 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const pass = document.getElementById('login-pass').value;
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
-
-        // Block owner email from logging in via public form if needed (Optional security)
-        if (email.trim().toLowerCase() === 'narhsnazzisco@gmail.com') {
-            return alert('Access Denied: The administrator email cannot be used via this form.');
-        }
 
         const user = users.find(u => u.email === email && u.pass === pass);
 
@@ -495,12 +625,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    searchInput.oninput = (e) => {
-        const term = e.target.value.toLowerCase();
-        renderProducts(laptops.filter(l =>
-            l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
-        ));
-    };
+    searchInputs.forEach(input => {
+        input.oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+
+            // Sync all search inputs
+            searchInputs.forEach(i => {
+                if (i !== e.target) i.value = e.target.value;
+            });
+
+            renderProducts(laptops.filter(l =>
+                l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
+            ));
+        };
+    });
 
     function addToCart(id) {
         cart.push(laptops.find(l => l.id === id));
@@ -509,7 +647,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateCart() {
-        cartCount.innerText = cart.length;
+        // Update all counters (desktop and mobile)
+        document.querySelectorAll('.cart-count-display').forEach(el => {
+            el.innerText = cart.length;
+        });
         cartItemsContainer.innerHTML = '';
         let total = 0;
         cart.forEach((item, index) => {
@@ -726,4 +867,3 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
-
