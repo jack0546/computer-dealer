@@ -24,6 +24,10 @@ body {
     overflow-x: hidden;
 }
 
+.mobile-only {
+    display: none;
+}
+
 /* Authentication Gate */
 .auth-overlay {
     position: fixed;
@@ -60,6 +64,12 @@ body {
 .auth-header .logo-img {
     max-height: 80px;
     margin-bottom: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .auth-header .logo-img {
+        max-height: 60px;
+    }
 }
 
 .auth-header p {
@@ -248,6 +258,25 @@ body {
 .nav-menu li.active {
     color: var(--primary);
     background: rgba(99, 102, 241, 0.1);
+}
+
+.mobile-search {
+    display: none;
+    padding: 0.5rem 1rem;
+}
+
+.mobile-search input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--glass);
+    color: var(--text);
+    outline: none;
+}
+
+.mobile-search input:focus {
+    border-color: var(--primary);
 }
 
 .nav-actions {
@@ -785,6 +814,10 @@ header {
         display: none;
     }
 
+    .mobile-only {
+        display: block;
+    }
+
     .content {
         padding: 2rem 1rem;
     }
@@ -795,6 +828,21 @@ header {
     }
 
     .hero h2 {
+        font-size: 2rem;
+    }
+
+    .delivery-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-card {
+        padding: 2rem;
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .delivery-card h2 {
         font-size: 2rem;
     }
 
@@ -821,6 +869,37 @@ header {
 
     .cart-panel {
         width: 100%;
+    }
+
+    .cart-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .hero {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .auth-card {
+        padding: 2rem;
+        width: 90%;
+    }
+
+    .input-group.full {
+        grid-column: span 1;
     }
 }
 
