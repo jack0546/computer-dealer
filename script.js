@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
         CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'Logo Maker'
+        STORE_NAME: 'Donald Laptops'
     };
 
     // ---------------------------------------------------------
