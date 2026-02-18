@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
+        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
         STORE_NAME: 'Logo Maker'
     };
 
@@ -14,20 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.2, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.01, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
         { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 0.01, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
         { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
+        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
         { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 0.01, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creator" },
-        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
+        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
         { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
         { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
@@ -53,44 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 0.01, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Linux" },
         { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
         { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 0.01, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
-        // Expanded Inventory
-        ...Array.from({ length: 150 }, (_, i) => {
-            const id = i + 41;
-            const brands = ["Apple", "Dell", "HP", "Lenovo", "ASUS", "Acer", "MSI", "Razer", "Microsoft", "Samsung"];
-            const categories = ["Gaming", "Professional", "Business", "Ultrabook", "Budget", "Student", "Creative", "Workstation"];
-            const workingImageIds = [
-                "1517336714731-489689fd1ca8",
-                "1593642632823-8f785ba67e45",
-                "1541807084-5c52b6b3adef",
-                "1525547719571-a2d4ac8945e2",
-                "1544244015-0df4b3ffc6b0",
-                "1550745165-9bc0b252726f",
-                "1496181133206-80ce9b88a853",
-                "1588872657578-7efd1f1555ed",
-                "1603302576837-37561b2e2302"
-            ];
-            const brand = brands[id % brands.length];
-            const category = categories[id % categories.length];
-            const imageId = workingImageIds[id % workingImageIds.length];
-            const price = 0.01;
-            return {
-                id,
-                name: `${brand} ${category} Elite ${id}`,
-                brand,
-                price,
-                specs: `High Performance ${category} Specs, ${16 + (id % 32)}GB RAM, ${256 * (1 + (id % 4))}GB SSD`,
-                image: `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=80&w=400`,
-                category
-            };
-        })
+        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" }
     ];
 
     let cart = [];
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
     let pendingUser = null; // Used during 2FA verification step
     let tempSecret = null; // Used during 2FA setup
-    let pendingCheckout = false; // NEW: Track if login was triggered by checkout
 
     // ---------------------------------------------------------
     // 2. DOM ELEMENTS
@@ -103,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLogin = document.getElementById('show-login');
     const logoutBtn = document.getElementById('logout-btn');
     const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    const sidebar = document.getElementById('sidebar');
 
     // Sections
     const sections = document.querySelectorAll('.content-section');
@@ -111,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Store elements
     const productGrid = document.getElementById('product-grid');
-    const searchInputs = document.querySelectorAll('#search-input, .search-input-field');
+    const searchInput = document.getElementById('search-input');
 
     // Cart elements
     const cartToggle = document.getElementById('cart-toggle');
@@ -147,143 +116,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryAddressInput = document.getElementById('delivery-address');
     const deliveryCityInput = document.getElementById('delivery-city');
 
-    // Password strength elements
-    const signupPassInput = document.getElementById('signup-pass');
-    const passwordStrengthDiv = document.getElementById('password-strength');
-    const strengthText = document.getElementById('strength-text');
-
     // ---------------------------------------------------------
-    // 3. PASSWORD VALIDATION
-    // ---------------------------------------------------------
-    function validatePasswordStrength(password) {
-        const minLength = password.length >= 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /\d/.test(password);
-        const hasSpecialChar = /[@$!%*?&]/.test(password);
-
-        const strength = [minLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
-
-        return {
-            strength,
-            minLength,
-            hasUpperCase,
-            hasLowerCase,
-            hasNumber,
-            hasSpecialChar,
-            isValid: strength === 5
-        };
-    }
-
-    // Real-time password strength indicator
-    if (signupPassInput) {
-        signupPassInput.addEventListener('input', (e) => {
-            const password = e.target.value;
-            if (password.length === 0) {
-                passwordStrengthDiv.style.display = 'none';
-                return;
-            }
-
-            passwordStrengthDiv.style.display = 'block';
-            const validation = validatePasswordStrength(password);
-
-            let strengthLabel = '';
-            let color = '';
-
-            if (validation.strength <= 2) {
-                strengthLabel = '❌ Weak - Add uppercase, numbers & special characters';
-                color = '#ef4444';
-            } else if (validation.strength === 3) {
-                strengthLabel = '⚠️ Fair - Add more variety';
-                color = '#f59e0b';
-            } else if (validation.strength === 4) {
-                strengthLabel = '✓ Good - Almost there!';
-                color = '#3b82f6';
-            } else {
-                strengthLabel = '✅ Strong - Perfect!';
-                color = '#10b981';
-            }
-
-            strengthText.textContent = strengthLabel;
-            strengthText.style.color = color;
-        });
-    }
-
-    // ---------------------------------------------------------
-    // 4. AUTHENTICATION LOGIC
+    // 3. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
     menuToggle.onclick = () => {
-        navMenu.classList.toggle('active');
+        sidebar.classList.toggle('active');
     };
     function initGoogleLogin() {
-        // DETECT LOCAL FILE PROTOCOL TO FIX OAUTH ERROR
-        if (window.location.protocol === 'file:') {
-            console.log("Running locally: Enabling Mock Google Login");
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            if (googleLoginBtn) {
-                googleLoginBtn.innerHTML = `
-                    <button type="button" id="mock-google-btn" style="
-                        display: flex; align-items: center; justify-content: center; width: 100%; 
-                        padding: 10px; background: white; color: #3c4043; border: 1px solid #dadce0; 
-                        border-radius: 20px; font-family: 'Google Sans', arial, sans-serif; font-weight: 500; 
-                        cursor: pointer; font-size: 14px; transition: background 0.2s;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
-                             style="width: 18px; height: 18px; margin-right: 10px;">
-                        Sign in with Google (Dev Mode)
-                    </button>
-                    <p style="text-align: center; font-size: 0.75rem; color: #ef4444; margin-top: 5px;">
-                        *Local file detected: Using simulated login to bypass OAuth errors
-                    </p>
-                `;
-
-                document.getElementById('mock-google-btn').onclick = () => {
-                    const mockEmail = prompt("Enter a test email for Google Login:", "test-user@gmail.com");
-                    if (!mockEmail) return;
-
-                    // Create a fake JWT payload to simulate Google response
-                    const mockPayload = {
-                        name: "Google User (Dev)",
-                        email: mockEmail,
-                        picture: `https://ui-avatars.com/api/?name=Google+User&background=random`,
-                        exp: Math.floor(Date.now() / 1000) + 3600
-                    };
-
-                    // JSON -> String -> Base64 to mimic JWT part 2
-                    const cleanBase64 = btoa(JSON.stringify(mockPayload));
-                    const mockCredential = `header.${cleanBase64}.signature`;
-
-                    handleGoogleResponse({ credential: mockCredential });
-                };
-            }
-            return;
-        }
-
-        if (typeof google === 'undefined') {
-            setTimeout(initGoogleLogin, 500); // SDK not ready, retry
-            return;
-        }
+        if (typeof google === 'undefined') return;
 
         google.accounts.id.initialize({
             client_id: CONFIG.GOOGLE_CLIENT_ID,
             callback: handleGoogleResponse,
-            auto_select: false,
+            auto_select: false, // Don't auto-sign in without interaction, but show prompt
             cancel_on_tap_outside: true
         });
 
-        const googleLoginBtn = document.getElementById('google-login-btn');
-        if (googleLoginBtn) {
-            google.accounts.id.renderButton(
-                googleLoginBtn,
-                {
-                    theme: "outline",
-                    size: "large",
-                    width: "100%",
-                    text: "signup_with",
-                    shape: "pill"
-                }
-            );
+        // 1. Trigger the "One Tap" prompt automatically
+        google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                console.log("One Tap prompt not displayed or skipped. Fallback to button.");
+            }
+        });
+
+        // 2. Keep the custom button as a manual fallback
+        const customGoogleBtn = document.getElementById('custom-google-btn');
+        if (customGoogleBtn) {
+            customGoogleBtn.onclick = () => {
+                google.accounts.id.prompt();
+            };
         }
-        google.accounts.id.prompt();
     }
 
     function handleGoogleResponse(response) {
@@ -295,8 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: payload.name,
             email: payload.email.toLowerCase(),
             avatar: payload.picture,
-            googleUser: true, // Mark as a Google-integrated user
-            lastLogin: new Date().toISOString() // Track last login
+            googleUser: true // Mark as a Google-integrated user
         };
 
         // Persistent Signup Logic (Automatic Registration)
@@ -304,19 +165,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingUser = users.find(u => u.email === gUser.email);
 
         if (!existingUser) {
-            // First time visit - register the user with signup date
-            gUser.signupDate = new Date().toISOString();
+            // First time visit - register the user
             users.push(gUser);
             localStorage.setItem('users', JSON.stringify(users));
-            console.log("New User Registered via Google:", gUser.email, "on", gUser.signupDate);
+            console.log("New User Registered via Google:", gUser.email);
         } else {
-            // Returning user - update their profile and last login
+            // Returning user - update their profile if needed (keep existing settings like 2FA)
             const index = users.findIndex(u => u.email === gUser.email);
-            users[index] = { ...users[index], ...gUser, signupDate: users[index].signupDate }; // Preserve original signup date
+            users[index] = { ...users[index], ...gUser };
             localStorage.setItem('users', JSON.stringify(users));
             // Use the data from high-security storage (existing user records)
             currentUser = users[index];
-            console.log("User logged in via Google:", currentUser.email, "Last login:", currentUser.lastLogin);
         }
 
         localStorage.setItem('currentUser', JSON.stringify(currentUser || gUser));
@@ -325,53 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkAuth() {
-        const userFullName = document.getElementById('user-full-name');
-        const loginBtn = document.getElementById('login-btn');
-        const mobileLoginLinks = document.querySelectorAll('.auth-link-login');
-        const mobileLogoutLinks = document.querySelectorAll('.auth-link-logout');
-
         if (currentUser) {
             authGate.style.display = 'none';
             mainApp.style.display = 'flex';
-            if (userFullName) userFullName.textContent = currentUser.name;
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'block';
-
-            // Mobile Nav Updates
-            mobileLoginLinks.forEach(el => el.style.display = 'none');
-            mobileLogoutLinks.forEach(el => el.style.display = 'block');
-
-            document.getElementById('user-avatar').src = currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
+            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
             renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
-
-            // If user logged in during checkout, resume checkout
-            if (pendingCheckout) {
-                pendingCheckout = false;
-                checkoutBtn.onclick();
-            }
         } else {
-            // Keep store visible for guests, but hide certain features
-            authGate.style.display = 'none';
-            mainApp.style.display = 'flex';
-            if (userFullName) userFullName.textContent = 'Guest';
-            if (loginBtn) loginBtn.style.display = 'block';
-            if (logoutBtn) logoutBtn.style.display = 'none';
-
-            // Mobile Nav Updates
-            mobileLoginLinks.forEach(el => el.style.display = 'block');
-            mobileLogoutLinks.forEach(el => el.style.display = 'none');
-
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
-            renderProducts(laptops);
-            clearTimeout(inactivityTimer);
-        }
-    }
-
-    if (document.getElementById('login-btn')) {
-        document.getElementById('login-btn').onclick = () => {
             authGate.style.display = 'flex';
-        };
+            mainApp.style.display = 'none';
+            clearTimeout(inactivityTimer); // Stop tracking if logged out
+        }
     }
 
     showSignup.onclick = () => {
@@ -389,52 +212,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     signupForm.onsubmit = (e) => {
         e.preventDefault();
-        const name = document.getElementById('signup-name').value.trim();
-        const email = document.getElementById('signup-email').value.trim().toLowerCase();
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
         const pass = document.getElementById('signup-pass').value;
-
-        // Validate password strength
-        const passwordValidation = validatePasswordStrength(pass);
-        if (!passwordValidation.isValid) {
-            let missing = [];
-            if (!passwordValidation.minLength) missing.push('at least 8 characters');
-            if (!passwordValidation.hasUpperCase) missing.push('uppercase letter');
-            if (!passwordValidation.hasLowerCase) missing.push('lowercase letter');
-            if (!passwordValidation.hasNumber) missing.push('number');
-            if (!passwordValidation.hasSpecialChar) missing.push('special character (@$!%*?&)');
-
-            alert(`❌ Password is too weak!\n\nYour password must include:\n• ${missing.join('\n• ')}\n\nPlease create a stronger password.`);
-            return;
-        }
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
 
-        // CHECK FOR DUPLICATE EMAIL (ONE-TIME REGISTRATION)
-        const existingUser = users.find(u => u.email.toLowerCase() === email);
-        if (existingUser) {
-            alert(`⚠️ EMAIL ALREADY REGISTERED\n\nThe email "${email}" is already associated with an account.\n\nPlease:\n• Login with your existing account, or\n• Use a different email address to create a new account`);
+        // OWNER EMAIL PROTECTION RULE
+        const sanitizedEmail = email.trim().toLowerCase();
+        console.log("Signup Attempt:", sanitizedEmail); // Debugging
+        if (sanitizedEmail === 'narhsnazzisco@gmail.com') {
+            alert('CRITICAL SECURITY ALERT: This email address (narhsnazzisco@gmail.com) is reserved for the store owner and cannot be used to create new accounts.');
             return;
         }
 
-        // Validate name (letters and spaces only)
-        if (!/^[A-Za-z\s]+$/.test(name)) {
-            alert('❌ Invalid Name\n\nPlease enter a valid name using only letters and spaces.');
-            return;
-        }
+        if (users.find(u => u.email === email)) return alert('Email already registered!');
 
-        const newUser = {
-            name,
-            email,
-            pass,
-            signupDate: new Date().toISOString(),
-            lastLogin: new Date().toISOString()
-        };
+        const newUser = { name, email, pass };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         currentUser = newUser;
-        console.log("✅ New User Registered:", newUser.email, "on", newUser.signupDate);
-        alert(`🎉 Account Created Successfully!\n\nWelcome, ${newUser.name}!\nYour account has been created.`);
         checkAuth();
     };
 
@@ -445,15 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
 
+        // Block owner email from logging in via public form if needed (Optional security)
+        if (email.trim().toLowerCase() === 'narhsnazzisco@gmail.com') {
+            return alert('Access Denied: The administrator email cannot be used via this form.');
+        }
+
         const user = users.find(u => u.email === email && u.pass === pass);
 
         if (user) {
-            // Update last login time
-            user.lastLogin = new Date().toISOString();
-            const userIndex = users.findIndex(u => u.email === email);
-            users[userIndex] = user;
-            localStorage.setItem('users', JSON.stringify(users));
-
             if (user.tfaEnabled) {
                 pendingUser = user;
                 document.getElementById('login-form-container').style.display = 'none';
@@ -461,7 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 currentUser = user;
-                console.log("User logged in:", user.email, "Last login:", user.lastLogin);
                 checkAuth();
             }
         } else {
@@ -542,16 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateSettingsUI();
             }
 
-            // Close menu after clicking a link
-            navMenu.classList.remove('active');
+            // Close sidebar on mobile after clicking
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
         };
-    });
-
-    // Close menu when clicking outside
-    window.addEventListener('click', (e) => {
-        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-            navMenu.classList.remove('active');
-        }
     });
 
     // ---------------------------------------------------------
@@ -625,20 +416,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    searchInputs.forEach(input => {
-        input.oninput = (e) => {
-            const term = e.target.value.toLowerCase();
-
-            // Sync all search inputs
-            searchInputs.forEach(i => {
-                if (i !== e.target) i.value = e.target.value;
-            });
-
-            renderProducts(laptops.filter(l =>
-                l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
-            ));
-        };
-    });
+    searchInput.oninput = (e) => {
+        const term = e.target.value.toLowerCase();
+        renderProducts(laptops.filter(l =>
+            l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
+        ));
+    };
 
     function addToCart(id) {
         cart.push(laptops.find(l => l.id === id));
@@ -647,10 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateCart() {
-        // Update all counters (desktop and mobile)
-        document.querySelectorAll('.cart-count-display').forEach(el => {
-            el.innerText = cart.length;
-        });
+        cartCount.innerText = cart.length;
         cartItemsContainer.innerHTML = '';
         let total = 0;
         cart.forEach((item, index) => {
@@ -669,14 +449,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCart.onclick = () => cartOverlay.classList.remove('active');
     checkoutBtn.onclick = () => {
         if (cart.length === 0) return alert('Cart is empty!');
-
-        // Check for authentication
-        if (!currentUser) {
-            pendingCheckout = true;
-            cartOverlay.classList.remove('active');
-            authGate.style.display = 'flex';
-            return;
-        }
 
         // Hide cart and show delivery modal
         cartOverlay.classList.remove('active');
