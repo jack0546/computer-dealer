@@ -5,13 +5,14 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCO33Lu9qabb2wsHXQ7ukPp4JM6wvWiAAk",
-  authDomain: "donald-laptops-fbe7d.firebaseapp.com",
-  projectId: "donald-laptops-fbe7d",
-  storageBucket: "donald-laptops-fbe7d.firebasestorage.app",
-  messagingSenderId: "59908918968",
-  appId: "1:59908918968:web:2aac95d75e99548e4f6e4d"
+ const firebaseConfig = {
+    apiKey: "YOUR_ACTUAL_API_KEY",  // Paste your real values here
+    authDomain: "your-project.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abc123"
 };
-
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
