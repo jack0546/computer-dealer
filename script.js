@@ -190,6 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
             renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
+            
+            // Initialize profile data if not exists
+            if (!currentUser.createdAt) {
+                currentUser.createdAt = new Date().toISOString();
+                currentUser.totalOrders = 0;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            // Load profile data if on profile page
+            if (document.getElementById('profile-section').classList.contains('active')) {
+                loadProfileData();
+            }
         } else {
             authGate.style.display = 'flex';
             mainApp.style.display = 'none';
@@ -634,6 +646,95 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('2FA has been disabled.');
         }
     };
+
+    // ---------------------------------------------------------
+    // PROFILE MANAGEMENT
+    // ---------------------------------------------------------
+    const profileForm = document.getElementById('profile-form');
+    const profileNameInput = document.getElementById('profile-name');
+    const profileEmailInput = document.getElementById('profile-email');
+    const profilePhoneInput = document.getElementById('profile-phone');
+    const profileAddressInput = document.getElementById('profile-address');
+    const profileCityInput = document.getElementById('profile-city');
+    const profileCountryInput = document.getElementById('profile-country');
+    const cancelProfileEdit = document.getElementById('cancel-profile-edit');
+
+    // Display elements
+    const profileNameDisplay = document.getElementById('profile-name-display');
+    const profileEmailDisplay = document.getElementById('profile-email-display');
+    const profileAvatarDisplay = document.getElementById('profile-avatar-display');
+    const totalOrdersDisplay = document.getElementById('total-orders');
+    const accountCreatedDisplay = document.getElementById('account-created');
+    const lastLoginDisplay = document.getElementById('last-login');
+
+    function loadProfileData() {
+        if (!currentUser) return;
+
+        // Load basic info
+        profileNameDisplay.textContent = currentUser.name || 'User Name';
+        profileEmailDisplay.textContent = currentUser.email || 'user@example.com';
+        profileAvatarDisplay.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'User')}&background=6366f1&color=fff`;
+
+        // Load form data
+        profileNameInput.value = currentUser.name || '';
+        profileEmailInput.value = currentUser.email || '';
+        profilePhoneInput.value = currentUser.phone || '';
+        profileAddressInput.value = currentUser.address || '';
+        profileCityInput.value = currentUser.city || '';
+        profileCountryInput.value = currentUser.country || '';
+
+        // Load statistics
+        totalOrdersDisplay.textContent = currentUser.totalOrders || '0';
+        
+        if (currentUser.createdAt) {
+            const createdDate = new Date(currentUser.createdAt);
+            accountCreatedDisplay.textContent = createdDate.toLocaleDateString();
+        } else {
+            accountCreatedDisplay.textContent = 'Recently';
+        }
+
+        lastLoginDisplay.textContent = new Date().toLocaleString();
+    }
+
+    profileForm.onsubmit = (e) => {
+        e.preventDefault();
+
+        // Update current user data
+        currentUser.name = profileNameInput.value;
+        currentUser.email = profileEmailInput.value;
+        currentUser.phone = profilePhoneInput.value;
+        currentUser.address = profileAddressInput.value;
+        currentUser.city = profileCityInput.value;
+        currentUser.country = profileCountryInput.value;
+
+        // Update in users array
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const index = users.findIndex(u => u.email === currentUser.email);
+        if (index !== -1) {
+            users[index] = currentUser;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Update current user in localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        // Reload profile display
+        loadProfileData();
+
+        // Update avatar in header
+        document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=6366f1&color=fff`;
+
+        alert('Profile updated successfully!');
+    };
+
+    cancelProfileEdit.onclick = () => {
+        loadProfileData(); // Reset form to current values
+    };
+
+    // Load profile data when profile section is opened
+    document.querySelector('[data-section="profile"]').addEventListener('click', () => {
+        loadProfileData();
+    });
 
     // Initial check
     checkAuth();
