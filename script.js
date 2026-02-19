@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
+        CONVERSION_RATE_USD_TO_GHS: 15.77, // Fixed rate for demonstration (Adjust as needed)
         STORE_NAME: 'Donald Laptops'
     };
 
@@ -740,3 +740,4 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
+
