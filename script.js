@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 15.77, // Fixed rate for demonstration (Adjust as needed)
+        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
         STORE_NAME: 'Donald Laptops'
     };
 
@@ -184,11 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkAuth() {
+        // Always show the main app (allow browsing without login)
+        authGate.style.display = 'none';
+        mainApp.style.display = 'flex';
+        renderProducts(laptops);
+        
         if (currentUser) {
-            authGate.style.display = 'none';
-            mainApp.style.display = 'flex';
+            // User is logged in
             document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
-            renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
             
             // Initialize profile data if not exists
@@ -203,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadProfileData();
             }
         } else {
-            authGate.style.display = 'flex';
-            mainApp.style.display = 'none';
+            // User is not logged in - show guest avatar
+            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
             clearTimeout(inactivityTimer); // Stop tracking if logged out
         }
     }
@@ -324,6 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutBtn.onclick = () => handleLogout(false);
 
+    // User avatar click handler - show auth gate if not logged in
+    document.getElementById('user-avatar').onclick = () => {
+        if (!currentUser) {
+            authGate.style.display = 'flex';
+        }
+    };
+
     // ---------------------------------------------------------
     // 4. NAVIGATION LOGIC
     // ---------------------------------------------------------
@@ -331,6 +341,14 @@ document.addEventListener('DOMContentLoaded', () => {
         link.onclick = () => {
             const sectionId = link.getAttribute('data-section');
             const filter = link.getAttribute('data-filter');
+
+            // Check if section requires authentication
+            const protectedSections = ['profile', 'settings'];
+            if (protectedSections.includes(sectionId) && !currentUser) {
+                alert('Please sign in to access this section');
+                authGate.style.display = 'flex';
+                return;
+            }
 
             // Switch active link
             navLinks.forEach(l => l.classList.remove('active'));
@@ -348,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (sectionId === 'settings') {
                 updateSettingsUI();
+            } else if (sectionId === 'profile') {
+                loadProfileData();
             }
 
             // Close sidebar on mobile after clicking
@@ -461,6 +481,14 @@ document.addEventListener('DOMContentLoaded', () => {
     closeCart.onclick = () => cartOverlay.classList.remove('active');
     checkoutBtn.onclick = () => {
         if (cart.length === 0) return alert('Cart is empty!');
+
+        // Check if user is logged in
+        if (!currentUser) {
+            alert('Please sign in to complete your purchase');
+            cartOverlay.classList.remove('active');
+            authGate.style.display = 'flex';
+            return;
+        }
 
         // Hide cart and show delivery modal
         cartOverlay.classList.remove('active');
@@ -740,4 +768,3 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     initGoogleLogin();
 });
-
