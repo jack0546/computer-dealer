@@ -6,60 +6,109 @@ document.addEventListener('DOMContentLoaded', () => {
         PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 10.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'Donald Laptops'
+        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
+        STORE_NAME: 'Logo Maker'
     };
 
     // ---------------------------------------------------------
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 1.00, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Premium" },
-        { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 1.00, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 1.00, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 1.00, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
-        { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 1.00, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 1.00, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 1.00, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 1.00, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 1.00, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 1.00, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creator" },
-        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Thin & Light" },
-        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 1.00, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
-        { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 1.00, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 18, "name": "Portégé X30L-K", "brand": "Dynabook", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 19, "name": "VAIO Z", "brand": "VAIO", "price": 1.00, "specs": "i7, 32GB RAM, 2TB SSD, Carbon Fiber", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Luxury" },
-        { "id": 20, "name": "Framework Laptop 13", "brand": "Framework", "price": 1.00, "specs": "Modular, i5/i7/Ryzen", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Modular" },
-        { "id": 21, "name": "Lemur Pro", "brand": "System76", "price": 1.00, "specs": "i5/i7, Coreboot, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Linux" },
-        { "id": 22, "name": "Librem 14", "brand": "Purism", "price": 1.00, "specs": "i7, Privacy Switches, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Privacy" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.01, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 0.01, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
+        { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 0.01, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creative" },
+        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
+        { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 18, "name": "Portégé X30L-K", "brand": "Dynabook", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 19, "name": "VAIO Z", "brand": "VAIO", "price": 0.01, "specs": "i7, 32GB RAM, 2TB SSD, Carbon Fiber", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 20, "name": "Framework Laptop 13", "brand": "Framework", "price": 0.01, "specs": "Modular, i5/i7/Ryzen", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 21, "name": "Lemur Pro", "brand": "System76", "price": 0.01, "specs": "i5/i7, Coreboot, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 22, "name": "Librem 14", "brand": "Purism", "price": 0.01, "specs": "i7, Privacy Switches, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
         { "id": 23, "name": "B360", "brand": "Getac", "price": 0.01, "specs": "i7, Fully Rugged, Sunlight Readable", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
-        { "id": 24, "name": "CoreBook X", "brand": "Chuwi", "price": 1.00, "specs": "i5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 25, "name": "INBook X2", "brand": "Infinix", "price": 1.00, "specs": "i3/i5, Thin & Light, Colorful", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 26, "name": "MagicBook 14", "brand": "Honor", "price": 1.00, "specs": "Ryzen 5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Mainstream" },
-        { "id": 27, "name": "Book Slim", "brand": "Realme", "price": 1.00, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Mainstream" },
-        { "id": 28, "name": "ZBook Studio", "brand": "Sony", "price": 1.00, "specs": "i9, 64GB RAM, 4K Display", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 29, "name": "Tecra A50", "brand": "Toshiba", "price": 1.00, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 30, "name": "Presario", "brand": "Compaq", "price": 1.00, "specs": "i3, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 31, "name": "NV Series", "brand": "Gateway", "price": 1.00, "specs": "Pentium Gold, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 32, "name": "EasyNote", "brand": "Packard Bell", "price": 1.00, "specs": "Celeron, 4GB RAM, 128GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 33, "name": "Nightsky RX315", "brand": "Eurocom", "price": 1.00, "specs": "i9, 64GB RAM, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
-        { "id": 34, "name": "Akoya", "brand": "Medion", "price": 1.00, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Mainstream" },
-        { "id": 35, "name": "Vision 14", "brand": "Schenker", "price": 1.00, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 36, "name": "InfinityBook", "brand": "TUXEDO", "price": 1.00, "specs": "i7, Linux, 16GB RAM", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Linux" },
-        { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 1.00, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Linux" },
-        { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 1.00, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 1.00, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 1.00, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" }
+        { "id": 24, "name": "CoreBook X", "brand": "Chuwi", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 25, "name": "INBook X2", "brand": "Infinix", "price": 0.01, "specs": "i3/i5, Thin & Light, Colorful", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 26, "name": "MagicBook 14", "brand": "Honor", "price": 0.01, "specs": "Ryzen 5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 27, "name": "Book Slim", "brand": "Realme", "price": 0.01, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 28, "name": "ZBook Studio", "brand": "Sony", "price": 0.01, "specs": "i9, 64GB RAM, 4K Display", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 29, "name": "Tecra A50", "brand": "Toshiba", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 30, "name": "Presario", "brand": "Compaq", "price": 0.01, "specs": "i3, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 31, "name": "NV Series", "brand": "Gateway", "price": 0.01, "specs": "Pentium Gold, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 32, "name": "EasyNote", "brand": "Packard Bell", "price": 0.01, "specs": "Celeron, 4GB RAM, 128GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 33, "name": "Nightsky RX315", "brand": "Eurocom", "price": 0.01, "specs": "i9, 64GB RAM, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 34, "name": "Akoya", "brand": "Medion", "price": 0.01, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 35, "name": "Vision 14", "brand": "Schenker", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 36, "name": "InfinityBook", "brand": "TUXEDO", "price": 0.01, "specs": "i7, Linux, 16GB RAM", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 0.01, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 0.01, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
+        // Expanded Inventory — 750 dynamically generated laptops (IDs 41–790)
+        ...Array.from({ length: 750 }, (_, i) => {
+            const id = i + 41;
+            const brands = [
+                "Apple", "Dell", "HP", "Lenovo", "ASUS", "Acer", "MSI", "Razer",
+                "Microsoft", "Samsung", "LG", "Gigabyte", "Alienware", "Huawei",
+                "Sony", "Toshiba", "Honor", "Xiaomi", "Fujitsu", "Schenker"
+            ];
+            const categories = [
+                "Gaming", "Professional", "Business", "Ultrabook",
+                "Budget", "Student", "Creative", "Workstation", "Convertible", "Rugged"
+            ];
+            const cpus = [
+                "Intel Core i5-13500H", "Intel Core i7-13700H", "Intel Core i9-13900H",
+                "AMD Ryzen 5 7600X", "AMD Ryzen 7 7745HX", "AMD Ryzen 9 7945HX",
+                "Intel Core i5-1235U", "Intel Core i7-1265U", "Apple M2 Pro", "Apple M3"
+            ];
+            const gpus = [
+                "RTX 4050", "RTX 4060", "RTX 4070", "RTX 4080", "RTX 4090",
+                "Radeon RX 6700M", "Radeon RX 7600M", "Intel Iris Xe", "Apple GPU 19-core", "RTX 3060"
+            ];
+            const ramOpts = [8, 16, 32, 64];
+            const storageOpts = [256, 512, 1024, 2048];
+            const workingImageIds = [
+                "1517336714731-489689fd1ca8", "1593642632823-8f785ba67e45",
+                "1541807084-5c52b6b3adef", "1525547719571-a2d4ac8945e2",
+                "1544244015-0df4b3ffc6b0", "1550745165-9bc0b252726f",
+                "1496181133206-80ce9b88a853", "1588872657578-7efd1f1555ed",
+                "1603302576837-37561b2e2302"
+            ];
+            const brand = brands[id % brands.length];
+            const category = categories[i % categories.length]; // Changed from id to i for stable distribution
+            const cpu = cpus[id % cpus.length];
+            const gpu = gpus[id % gpus.length];
+            const ram = ramOpts[id % ramOpts.length];
+            const storage = storageOpts[id % storageOpts.length];
+            const imageId = workingImageIds[id % workingImageIds.length];
+            return {
+                id,
+                name: `${brand} ${category} Pro ${id}`,
+                brand,
+                price: 0.01,
+                specs: `${cpu}, ${ram}GB RAM, ${storage}GB SSD, ${gpu}`,
+                image: `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=80&w=400`,
+                category
+            };
+        })
     ];
 
     let cart = [];
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
     let pendingUser = null; // Used during 2FA verification step
     let tempSecret = null; // Used during 2FA setup
+    let pendingCheckout = false; // NEW: Track if login was triggered by checkout
+    let inactivityTimer; // Declared early so checkAuth() can safely call clearTimeout on it
 
     // ---------------------------------------------------------
     // 2. DOM ELEMENTS
@@ -72,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLogin = document.getElementById('show-login');
     const logoutBtn = document.getElementById('logout-btn');
     const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
+    const navMenu = document.getElementById('nav-menu');
 
     // Sections
     const sections = document.querySelectorAll('.content-section');
@@ -80,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Store elements
     const productGrid = document.getElementById('product-grid');
-    const searchInput = document.getElementById('search-input');
+    const searchInputs = document.querySelectorAll('#search-input, .search-input-field');
 
     // Cart elements
     const cartToggle = document.getElementById('cart-toggle');
@@ -116,36 +165,172 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryAddressInput = document.getElementById('delivery-address');
     const deliveryCityInput = document.getElementById('delivery-city');
 
+    // Password strength elements
+    const signupPassInput = document.getElementById('signup-pass');
+    const passwordStrengthDiv = document.getElementById('password-strength');
+    const strengthText = document.getElementById('strength-text');
+
     // ---------------------------------------------------------
-    // 3. AUTHENTICATION LOGIC
+    // 3. PASSWORD VALIDATION
+    // ---------------------------------------------------------
+    function validatePasswordStrength(password) {
+        const minLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialChar = /[@$!%*?&]/.test(password);
+
+        const strength = [minLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
+
+        return {
+            strength,
+            minLength,
+            hasUpperCase,
+            hasLowerCase,
+            hasNumber,
+            hasSpecialChar,
+            isValid: strength === 5
+        };
+    }
+
+    // Real-time password strength indicator
+    if (signupPassInput) {
+        signupPassInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            if (password.length === 0) {
+                passwordStrengthDiv.style.display = 'none';
+                return;
+            }
+
+            passwordStrengthDiv.style.display = 'block';
+            const validation = validatePasswordStrength(password);
+
+            let strengthLabel = '';
+            let color = '';
+
+            if (validation.strength <= 2) {
+                strengthLabel = '❌ Weak - Add uppercase, numbers & special characters';
+                color = '#ef4444';
+            } else if (validation.strength === 3) {
+                strengthLabel = '⚠️ Fair - Add more variety';
+                color = '#f59e0b';
+            } else if (validation.strength === 4) {
+                strengthLabel = '✓ Good - Almost there!';
+                color = '#3b82f6';
+            } else {
+                strengthLabel = '✅ Strong - Perfect!';
+                color = '#10b981';
+            }
+
+            strengthText.textContent = strengthLabel;
+            strengthText.style.color = color;
+        });
+    }
+
+    // ---------------------------------------------------------
+    // 4. AUTHENTICATION LOGIC
     // ---------------------------------------------------------
     menuToggle.onclick = () => {
-        sidebar.classList.toggle('active');
+        navMenu.classList.toggle('active');
     };
     function initGoogleLogin() {
-        if (typeof google === 'undefined') return;
+        // DETECT LOCAL FILE PROTOCOL TO FIX OAUTH ERROR
+        if (window.location.protocol === 'file:') {
+            console.log("Running locally: Enabling Mock Google Login");
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            if (googleLoginBtn) {
+                googleLoginBtn.innerHTML = `
+                    <button type="button" id="mock-google-btn" style="
+                        display: flex; align-items: center; justify-content: center; width: 100%; 
+                        padding: 10px; background: white; color: #3c4043; border: 1px solid #dadce0; 
+                        border-radius: 20px; font-family: 'Google Sans', arial, sans-serif; font-weight: 500; 
+                        cursor: pointer; font-size: 14px; transition: background 0.2s;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
+                             style="width: 18px; height: 18px; margin-right: 10px;">
+                        Continue with Google (Dev Mode)
+                    </button>
+                    <p style="text-align: center; font-size: 0.75rem; color: #ef4444; margin-top: 5px;">
+                        *Local file detected: Using simulated login to bypass OAuth errors
+                    </p>
+                `;
+
+                const mockBtn = document.getElementById('mock-google-btn');
+                if (mockBtn) {
+                    mockBtn.onclick = () => {
+                        const mockEmail = prompt("Enter a test email for Google Login:", "test-user@gmail.com");
+                        if (!mockEmail) return;
+
+                        const mockPayload = {
+                            name: "Google User (Dev)",
+                            email: mockEmail,
+                            picture: `https://ui-avatars.com/api/?name=Google+User&background=random`,
+                            exp: Math.floor(Date.now() / 1000) + 3600
+                        };
+
+                        const cleanBase64 = btoa(JSON.stringify(mockPayload));
+                        const mockCredential = `header.${cleanBase64}.signature`;
+
+                        handleGoogleResponse({ credential: mockCredential });
+                    };
+                }
+            }
+            return;
+        }
+
+        if (typeof google === 'undefined') {
+            setTimeout(initGoogleLogin, 500); // SDK not ready, retry
+            return;
+        }
 
         google.accounts.id.initialize({
             client_id: CONFIG.GOOGLE_CLIENT_ID,
             callback: handleGoogleResponse,
-            auto_select: false, // Don't auto-sign in without interaction, but show prompt
+            auto_select: false,
             cancel_on_tap_outside: true
         });
 
-        // 1. Trigger the "One Tap" prompt automatically
-        google.accounts.id.prompt((notification) => {
-            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                console.log("One Tap prompt not displayed or skipped. Fallback to button.");
-            }
-        });
-
-        // 2. Keep the custom button as a manual fallback
-        const customGoogleBtn = document.getElementById('custom-google-btn');
-        if (customGoogleBtn) {
-            customGoogleBtn.onclick = () => {
-                google.accounts.id.prompt();
-            };
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        if (googleLoginBtn) {
+            google.accounts.id.renderButton(
+                googleLoginBtn,
+                {
+                    theme: "outline",
+                    size: "large",
+                    width: "100%",
+                    text: "signin_with",
+                    shape: "pill"
+                }
+            );
         }
+
+        const googleSignUpBtn = document.getElementById('google-signup-btn');
+        if (googleSignUpBtn) {
+            google.accounts.id.renderButton(
+                googleSignUpBtn,
+                {
+                    theme: "outline",
+                    size: "large",
+                    width: "100%",
+                    text: "signup_with",
+                    shape: "pill"
+                }
+            );
+        }
+
+        const googleFooterBtn = document.getElementById('google-footer-btn');
+        if (googleFooterBtn) {
+            google.accounts.id.renderButton(
+                googleFooterBtn,
+                {
+                    theme: "outline",
+                    size: "large",
+                    width: "100%",
+                    text: "signin_with",
+                    shape: "pill"
+                }
+            );
+        }
+        google.accounts.id.prompt();
     }
 
     function handleGoogleResponse(response) {
@@ -157,7 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
             name: payload.name,
             email: payload.email.toLowerCase(),
             avatar: payload.picture,
-            googleUser: true // Mark as a Google-integrated user
+            googleUser: true, // Mark as a Google-integrated user
+            lastLogin: new Date().toISOString() // Track last login
         };
 
         // Persistent Signup Logic (Automatic Registration)
@@ -165,17 +351,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingUser = users.find(u => u.email === gUser.email);
 
         if (!existingUser) {
-            // First time visit - register the user
+            // First time visit - register the user with signup date
+            gUser.signupDate = new Date().toISOString();
             users.push(gUser);
             localStorage.setItem('users', JSON.stringify(users));
-            console.log("New User Registered via Google:", gUser.email);
+            console.log("New User Registered via Google:", gUser.email, "on", gUser.signupDate);
         } else {
-            // Returning user - update their profile if needed (keep existing settings like 2FA)
+            // Returning user - update their profile and last login
             const index = users.findIndex(u => u.email === gUser.email);
-            users[index] = { ...users[index], ...gUser };
+            users[index] = { ...users[index], ...gUser, signupDate: users[index].signupDate }; // Preserve original signup date
             localStorage.setItem('users', JSON.stringify(users));
             // Use the data from high-security storage (existing user records)
             currentUser = users[index];
+            console.log("User logged in via Google:", currentUser.email, "Last login:", currentUser.lastLogin);
         }
 
         localStorage.setItem('currentUser', JSON.stringify(currentUser || gUser));
@@ -184,32 +372,61 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkAuth() {
-        // Always show the main app (allow browsing without login)
-        authGate.style.display = 'none';
-        mainApp.style.display = 'flex';
-        renderProducts(laptops);
-        
+        const userFullName = document.getElementById('user-full-name');
+        const loginBtn = document.getElementById('login-btn');
+        const mobileLoginLinks = document.querySelectorAll('.auth-link-login');
+        const mobileLogoutLinks = document.querySelectorAll('.auth-link-logout');
+
         if (currentUser) {
-            // User is logged in
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${currentUser.name}&background=6366f1&color=fff`;
+            authGate.style.display = 'none';
+            mainApp.style.display = 'flex';
+            if (userFullName) userFullName.textContent = currentUser.name;
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
+
+            // Mobile Nav Updates
+            mobileLoginLinks.forEach(el => el.style.display = 'none');
+            mobileLogoutLinks.forEach(el => el.style.display = 'block');
+
+            const footerLoginContainer = document.getElementById('footer-google-login-container');
+            if (footerLoginContainer) footerLoginContainer.style.display = 'none';
+
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl) avatarEl.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=6366f1&color=fff`;
+            renderProducts(laptops);
             resetInactivityTimer(); // Start tracking inactivity
-            
-            // Initialize profile data if not exists
-            if (!currentUser.createdAt) {
-                currentUser.createdAt = new Date().toISOString();
-                currentUser.totalOrders = 0;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            }
-            
-            // Load profile data if on profile page
-            if (document.getElementById('profile-section').classList.contains('active')) {
-                loadProfileData();
+
+            // If user logged in during checkout, resume checkout
+            if (pendingCheckout) {
+                pendingCheckout = false;
+                handleCheckout();
             }
         } else {
-            // User is not logged in - show guest avatar
-            document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
-            clearTimeout(inactivityTimer); // Stop tracking if logged out
+            // Keep store visible for guests, but hide certain features
+            authGate.style.display = 'none';
+            mainApp.style.display = 'flex';
+            if (userFullName) userFullName.textContent = 'Guest';
+            if (loginBtn) loginBtn.style.display = 'block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+
+            // Mobile Nav Updates
+            mobileLoginLinks.forEach(el => el.style.display = 'block');
+            mobileLogoutLinks.forEach(el => el.style.display = 'none');
+
+            const footerLoginContainer = document.getElementById('footer-google-login-container');
+            if (footerLoginContainer) footerLoginContainer.style.display = 'flex';
+
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl) avatarEl.src = `https://ui-avatars.com/api/?name=Guest&background=94a3b8&color=fff`;
+            renderProducts(laptops);
+            clearTimeout(inactivityTimer);
         }
+    }
+
+    if (document.getElementById('login-btn')) {
+        document.getElementById('login-btn').onclick = () => {
+            authGate.style.display = 'flex';
+        };
     }
 
     showSignup.onclick = () => {
@@ -227,27 +444,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     signupForm.onsubmit = (e) => {
         e.preventDefault();
-        const name = document.getElementById('signup-name').value;
-        const email = document.getElementById('signup-email').value;
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim().toLowerCase();
         const pass = document.getElementById('signup-pass').value;
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
+        // Validate password strength
+        const passwordValidation = validatePasswordStrength(pass);
+        if (!passwordValidation.isValid) {
+            let missing = [];
+            if (!passwordValidation.minLength) missing.push('at least 8 characters');
+            if (!passwordValidation.hasUpperCase) missing.push('uppercase letter');
+            if (!passwordValidation.hasLowerCase) missing.push('lowercase letter');
+            if (!passwordValidation.hasNumber) missing.push('number');
+            if (!passwordValidation.hasSpecialChar) missing.push('special character (@$!%*?&)');
 
-        // OWNER EMAIL PROTECTION RULE
-        const sanitizedEmail = email.trim().toLowerCase();
-        console.log("Signup Attempt:", sanitizedEmail); // Debugging
-        if (sanitizedEmail === 'narhsnazzisco@gmail.com') {
-            alert('CRITICAL SECURITY ALERT: This email address (narhsnazzisco@gmail.com) is reserved for the store owner and cannot be used to create new accounts.');
+            alert(`❌ Password is too weak!\n\nYour password must include:\n• ${missing.join('\n• ')}\n\nPlease create a stronger password.`);
             return;
         }
 
-        if (users.find(u => u.email === email)) return alert('Email already registered!');
+        const users = JSON.parse(localStorage.getItem('users')) || [];
 
-        const newUser = { name, email, pass };
+        // CHECK FOR DUPLICATE EMAIL (ONE-TIME REGISTRATION)
+        const existingUser = users.find(u => u.email.toLowerCase() === email);
+        if (existingUser) {
+            alert(`⚠️ EMAIL ALREADY REGISTERED\n\nThe email "${email}" is already associated with an account.\n\nPlease:\n• Login with your existing account, or\n• Use a different email address to create a new account`);
+            return;
+        }
+
+        // Validate name (letters and spaces only)
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            alert('❌ Invalid Name\n\nPlease enter a valid name using only letters and spaces.');
+            return;
+        }
+
+        const newUser = {
+            name,
+            email,
+            pass,
+            signupDate: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
+        };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         currentUser = newUser;
+        console.log("✅ New User Registered:", newUser.email, "on", newUser.signupDate);
+        alert(`🎉 Account Created Successfully!\n\nWelcome, ${newUser.name}!\nYour account has been created.`);
         checkAuth();
     };
 
@@ -258,14 +500,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const users = JSON.parse(localStorage.getItem('users')) || [];
 
-        // Block owner email from logging in via public form if needed (Optional security)
-        if (email.trim().toLowerCase() === 'narhsnazzisco@gmail.com') {
-            return alert('Access Denied: The administrator email cannot be used via this form.');
-        }
-
         const user = users.find(u => u.email === email && u.pass === pass);
 
         if (user) {
+            // Update last login time
+            user.lastLogin = new Date().toISOString();
+            const userIndex = users.findIndex(u => u.email === email);
+            users[userIndex] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+
             if (user.tfaEnabled) {
                 pendingUser = user;
                 document.getElementById('login-form-container').style.display = 'none';
@@ -273,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 currentUser = user;
+                console.log("User logged in:", user.email, "Last login:", user.lastLogin);
                 checkAuth();
             }
         } else {
@@ -297,7 +541,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
     // SESSION TIMEOUT (IDLE LOGOUT)
     // ---------------------------------------------------------
-    let inactivityTimer;
     const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 minutes
 
     function resetInactivityTimer() {
@@ -327,30 +570,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutBtn.onclick = () => handleLogout(false);
 
-    // User avatar click handler - show auth gate if not logged in
-    document.getElementById('user-avatar').onclick = () => {
-        if (!currentUser) {
-            authGate.style.display = 'flex';
-        }
-    };
-
-    // ---------------------------------------------------------
+    // -------------------------------------------------------
     // 4. NAVIGATION LOGIC
-    // ---------------------------------------------------------
+    // -------------------------------------------------------
+    const catNavItems = document.querySelectorAll('.categories-nav li');
+
     navLinks.forEach(link => {
         link.onclick = () => {
             const sectionId = link.getAttribute('data-section');
             const filter = link.getAttribute('data-filter');
 
-            // Check if section requires authentication
-            const protectedSections = ['profile', 'settings'];
-            if (protectedSections.includes(sectionId) && !currentUser) {
-                alert('Please sign in to access this section');
-                authGate.style.display = 'flex';
-                return;
-            }
-
-            // Switch active link
+            // Switch active link (main nav)
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
@@ -359,22 +589,56 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(`${sectionId}-section`).classList.add('active');
 
             if (sectionId === 'store') {
-                if (filter === 'all') {
+                // Update category tab highlight
+                catNavItems.forEach(c => c.classList.remove('cat-active'));
+                const matchingCat = [...catNavItems].find(c => c.getAttribute('data-filter') === (filter || 'all'));
+                if (matchingCat) matchingCat.classList.add('cat-active');
+
+                if (!filter || filter === 'all') {
                     renderProducts(laptops);
                 } else {
                     renderProducts(laptops.filter(l => l.category === filter));
                 }
             } else if (sectionId === 'settings') {
                 updateSettingsUI();
-            } else if (sectionId === 'profile') {
-                loadProfileData();
             }
 
-            // Close sidebar on mobile after clicking
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('active');
+            // Close menu after clicking a link
+            navMenu.classList.remove('active');
+        };
+    });
+
+    // Category tab clicks
+    catNavItems.forEach(tab => {
+        tab.onclick = () => {
+            const filter = tab.getAttribute('data-filter');
+            catNavItems.forEach(c => c.classList.remove('cat-active'));
+            tab.classList.add('cat-active');
+
+            // Also update section to store
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById('store-section').classList.add('active');
+
+            if (!filter || filter === 'all') {
+                renderProducts(laptops);
+            } else {
+                renderProducts(laptops.filter(l => l.category === filter));
             }
         };
+    });
+
+    // Close menu when clicking outside
+    window.addEventListener('click', (e) => {
+        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
+    });
+
+    // Close menu when clicking mobile-only items
+    document.querySelectorAll('.mobile-only').forEach(item => {
+        item.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+        });
     });
 
     // ---------------------------------------------------------
@@ -446,45 +710,108 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.add-btn').forEach(btn => {
             btn.onclick = () => addToCart(parseInt(btn.getAttribute('data-id')));
         });
+
+        // Update counts UI
+        updateCategoryCounts();
     }
 
-    searchInput.oninput = (e) => {
-        const term = e.target.value.toLowerCase();
-        renderProducts(laptops.filter(l =>
-            l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
-        ));
-    };
+    function updateCategoryCounts() {
+        catNavItems.forEach(tab => {
+            const filter = tab.getAttribute('data-filter');
+            let count = 0;
+            if (filter === 'all') {
+                count = laptops.length;
+            } else {
+                count = laptops.filter(l => l.category === filter).length;
+            }
+
+            const badge = tab.querySelector('.count-badge') || document.createElement('span');
+            badge.className = 'count-badge';
+            badge.textContent = count;
+            if (!tab.querySelector('.count-badge')) tab.appendChild(badge);
+        });
+    }
+
+    searchInputs.forEach(input => {
+        input.oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+
+            // Sync all search inputs
+            searchInputs.forEach(i => {
+                if (i !== e.target) i.value = e.target.value;
+            });
+
+            renderProducts(laptops.filter(l =>
+                l.name.toLowerCase().includes(term) || l.brand.toLowerCase().includes(term)
+            ));
+        };
+    });
 
     function addToCart(id) {
-        cart.push(laptops.find(l => l.id === id));
+        const product = laptops.find(l => l.id === id);
+        if (!product) return;
+        cart.push(product);
         updateCart();
-        alert('Added to cart!');
+        // Brief visual feedback instead of blocking alert
+        const btn = document.querySelector(`.add-btn[data-id="${id}"]`);
+        if (btn) {
+            const orig = btn.textContent;
+            btn.textContent = '✓ Added!';
+            btn.style.background = '#10b981';
+            setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1200);
+        }
     }
 
+    // Exposed globally so inline onclick in cart HTML can reach it
+    window.removeFromCart = function (index) {
+        cart.splice(index, 1);
+        updateCart();
+    };
+
     function updateCart() {
-        cartCount.innerText = cart.length;
+        // Update all counters (desktop and mobile)
+        document.querySelectorAll('.cart-count-display').forEach(el => {
+            el.innerText = cart.length;
+        });
         cartItemsContainer.innerHTML = '';
         let total = 0;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem 0;">Your cart is empty.</p>`;
+            cartTotal.innerText = `$0`;
+            return;
+        }
+
         cart.forEach((item, index) => {
             total += item.price;
             const div = document.createElement('div');
             div.className = 'cart-item';
-            div.style.padding = '10px';
-            div.style.borderBottom = '1px solid #333';
-            div.innerHTML = `<h4>${item.name}</h4><p>$${item.price}</p>`;
+            div.style.padding = '12px 0';
+            div.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'center';
+            div.innerHTML = `
+                <div>
+                    <h4 style="font-size:0.95rem; margin-bottom:4px;">${item.name}</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem;">$${item.price.toFixed(2)}</p>
+                </div>
+                <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.2rem;">✕</button>
+            `;
             cartItemsContainer.appendChild(div);
         });
-        cartTotal.innerText = `$${total}`;
+        cartTotal.innerText = `$${total.toFixed(2)}`;
     }
 
     cartToggle.onclick = () => cartOverlay.classList.add('active');
     closeCart.onclick = () => cartOverlay.classList.remove('active');
-    checkoutBtn.onclick = () => {
-        if (cart.length === 0) return alert('Cart is empty!');
 
-        // Check if user is logged in
+    function handleCheckout() {
+        if (cart.length === 0) return alert('Your cart is empty! Add some laptops first.');
+
+        // Check for authentication
         if (!currentUser) {
-            alert('Please sign in to complete your purchase');
+            pendingCheckout = true;
             cartOverlay.classList.remove('active');
             authGate.style.display = 'flex';
             return;
@@ -493,7 +820,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide cart and show delivery modal
         cartOverlay.classList.remove('active');
         deliveryOverlay.classList.add('active');
-    };
+    }
+
+    checkoutBtn.onclick = handleCheckout;
 
     closeDelivery.onclick = () => deliveryOverlay.classList.remove('active');
 
@@ -597,16 +926,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSettingsUI() {
-        if (!currentUser) return;
+        if (!currentUser) {
+            // Show login prompt in settings if not logged in
+            const setupArea = document.getElementById('tfa-setup-area');
+            if (setupArea) setupArea.innerHTML = '<p style="color:var(--text-muted)">Please sign in to manage your security settings.</p>';
+            return;
+        }
 
         if (currentUser.tfaEnabled) {
             document.getElementById('tfa-setup-area').style.display = 'none';
-            tfaSetupWizard.style.display = 'none';
-            tfaActiveStatus.style.display = 'block';
+            if (tfaSetupWizard) tfaSetupWizard.style.display = 'none';
+            if (tfaActiveStatus) tfaActiveStatus.style.display = 'block';
         } else {
             document.getElementById('tfa-setup-area').style.display = 'block';
-            tfaSetupWizard.style.display = 'none';
-            tfaActiveStatus.style.display = 'none';
+            if (tfaSetupWizard) tfaSetupWizard.style.display = 'none';
+            if (tfaActiveStatus) tfaActiveStatus.style.display = 'none';
         }
     }
 
@@ -675,98 +1009,181 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // ---------------------------------------------------------
-    // PROFILE MANAGEMENT
-    // ---------------------------------------------------------
-    const profileForm = document.getElementById('profile-form');
-    const profileNameInput = document.getElementById('profile-name');
-    const profileEmailInput = document.getElementById('profile-email');
-    const profilePhoneInput = document.getElementById('profile-phone');
-    const profileAddressInput = document.getElementById('profile-address');
-    const profileCityInput = document.getElementById('profile-city');
-    const profileCountryInput = document.getElementById('profile-country');
-    const cancelProfileEdit = document.getElementById('cancel-profile-edit');
-
-    // Display elements
-    const profileNameDisplay = document.getElementById('profile-name-display');
-    const profileEmailDisplay = document.getElementById('profile-email-display');
-    const profileAvatarDisplay = document.getElementById('profile-avatar-display');
-    const totalOrdersDisplay = document.getElementById('total-orders');
-    const accountCreatedDisplay = document.getElementById('account-created');
-    const lastLoginDisplay = document.getElementById('last-login');
-
-    function loadProfileData() {
-        if (!currentUser) return;
-
-        // Load basic info
-        profileNameDisplay.textContent = currentUser.name || 'User Name';
-        profileEmailDisplay.textContent = currentUser.email || 'user@example.com';
-        profileAvatarDisplay.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'User')}&background=6366f1&color=fff`;
-
-        // Load form data
-        profileNameInput.value = currentUser.name || '';
-        profileEmailInput.value = currentUser.email || '';
-        profilePhoneInput.value = currentUser.phone || '';
-        profileAddressInput.value = currentUser.address || '';
-        profileCityInput.value = currentUser.city || '';
-        profileCountryInput.value = currentUser.country || '';
-
-        // Load statistics
-        totalOrdersDisplay.textContent = currentUser.totalOrders || '0';
-        
-        if (currentUser.createdAt) {
-            const createdDate = new Date(currentUser.createdAt);
-            accountCreatedDisplay.textContent = createdDate.toLocaleDateString();
-        } else {
-            accountCreatedDisplay.textContent = 'Recently';
-        }
-
-        lastLoginDisplay.textContent = new Date().toLocaleString();
-    }
-
-    profileForm.onsubmit = (e) => {
-        e.preventDefault();
-
-        // Update current user data
-        currentUser.name = profileNameInput.value;
-        currentUser.email = profileEmailInput.value;
-        currentUser.phone = profilePhoneInput.value;
-        currentUser.address = profileAddressInput.value;
-        currentUser.city = profileCityInput.value;
-        currentUser.country = profileCountryInput.value;
-
-        // Update in users array
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const index = users.findIndex(u => u.email === currentUser.email);
-        if (index !== -1) {
-            users[index] = currentUser;
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        // Update current user in localStorage
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-        // Reload profile display
-        loadProfileData();
-
-        // Update avatar in header
-        document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=6366f1&color=fff`;
-
-        alert('Profile updated successfully!');
-    };
-
-    cancelProfileEdit.onclick = () => {
-        loadProfileData(); // Reset form to current values
-    };
-
-    // Load profile data when profile section is opened
-    document.querySelector('[data-section="profile"]').addEventListener('click', () => {
-        loadProfileData();
-    });
-
     // Initial check
     checkAuth();
     initGoogleLogin();
+
+    // =====================================================
+    // LAPTOP BACKGROUND CANVAS ANIMATION - FULL VERSION
+    // =====================================================
+    (function initBgAnimation() {
+        const canvas = document.getElementById('bg-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        /* --- Polyfill-safe rounded rect path --- */
+        function rr(x, y, w, h, r) {
+            r = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+
+        /* --- Draw a single laptop --- */
+        function drawLaptop(item) {
+            const { x, y, size, rotation, pulse } = item;
+            const a = item.alpha * (0.75 + 0.25 * Math.sin(pulse));
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+
+            const w = size;
+            const sh = size * 0.60;   // screen height
+            const bh = size * 0.13;   // base height
+
+            /* ---- Screen lid ---- */
+            ctx.shadowColor = '#7c3aed';
+            ctx.shadowBlur = size * 0.35;
+            ctx.globalAlpha = a;
+            ctx.strokeStyle = `rgba(139, 92, 246, ${Math.min(a * 9, 1)})`;
+            ctx.lineWidth = 1.6;
+            rr(-w / 2, -sh - bh, w, sh, 6);
+            ctx.stroke();
+
+            /* ---- Screen inner frame (display) ---- */
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = a * 0.42;
+            ctx.strokeStyle = `rgba(196, 181, 253, 0.9)`;
+            ctx.lineWidth = 1;
+            rr(-w / 2 + w * 0.07, -sh - bh + sh * 0.09, w * 0.86, sh * 0.74, 4);
+            ctx.stroke();
+
+            /* ---- Tiny scanlines on screen ---- */
+            ctx.globalAlpha = a * 0.15;
+            ctx.strokeStyle = 'rgba(167, 139, 250, 0.8)';
+            ctx.lineWidth = 0.5;
+            for (let row = 0; row < 4; row++) {
+                const sy = -sh - bh + sh * 0.15 + row * (sh * 0.55 / 4);
+                ctx.beginPath();
+                ctx.moveTo(-w / 2 + w * 0.1, sy);
+                ctx.lineTo(w / 2 - w * 0.1, sy);
+                ctx.stroke();
+            }
+
+            /* ---- Keyboard base ---- */
+            ctx.shadowColor = '#6d28d9';
+            ctx.shadowBlur = size * 0.25;
+            ctx.globalAlpha = a;
+            ctx.strokeStyle = `rgba(139, 92, 246, ${Math.min(a * 9, 1)})`;
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.moveTo(-w / 2 - w * 0.07, -bh);
+            ctx.lineTo(-w / 2, -bh - 1);
+            ctx.lineTo(w / 2, -bh - 1);
+            ctx.lineTo(w / 2 + w * 0.07, -bh);
+            ctx.lineTo(w / 2 + w * 0.09, bh);
+            ctx.lineTo(-w / 2 - w * 0.09, bh);
+            ctx.closePath();
+            ctx.stroke();
+
+            /* ---- Trackpad ---- */
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = a * 0.28;
+            ctx.lineWidth = 1;
+            rr(-w * 0.14, bh * 0.05, w * 0.28, bh * 0.6, 2);
+            ctx.stroke();
+
+            /* ---- Webcam dot ---- */
+            ctx.shadowColor = 'rgba(196, 181, 253, 1)';
+            ctx.shadowBlur = 6;
+            ctx.globalAlpha = a * 0.8;
+            ctx.fillStyle = 'rgba(196, 181, 253, 0.95)';
+            ctx.beginPath();
+            ctx.arc(0, -sh - bh + 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        /* --- Draw faint constellation lines between nearby laptops --- */
+        function drawConnections(items) {
+            const MAX_DIST = 220;
+            for (let i = 0; i < items.length; i++) {
+                for (let j = i + 1; j < items.length; j++) {
+                    const a = items[i], b = items[j];
+                    const dx = a.x - b.x, dy = a.y - b.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MAX_DIST) {
+                        const op = (1 - dist / MAX_DIST) * 0.07;
+                        ctx.save();
+                        ctx.globalAlpha = op;
+                        ctx.strokeStyle = 'rgba(139, 92, 246, 1)';
+                        ctx.lineWidth = 0.6;
+                        ctx.shadowBlur = 0;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            }
+        }
+
+        /* --- Create 30 laptop particles --- */
+        const items = Array.from({ length: 30 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: 36 + Math.random() * 72,
+            vx: (Math.random() - 0.5) * 0.38,
+            vy: (Math.random() - 0.5) * 0.38,
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.004,
+            alpha: 0.10 + Math.random() * 0.14,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpd: 0.018 + Math.random() * 0.022
+        }));
+
+        /* --- Main animation loop --- */
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawConnections(items);
+
+            const pad = 160;
+            items.forEach(item => {
+                item.x += item.vx;
+                item.y += item.vy;
+                item.rotation += item.rotSpeed;
+                item.pulse += item.pulseSpd;
+
+                if (item.x < -pad) item.x = canvas.width + pad;
+                else if (item.x > canvas.width + pad) item.x = -pad;
+                if (item.y < -pad) item.y = canvas.height + pad;
+                else if (item.y > canvas.height + pad) item.y = -pad;
+
+                drawLaptop(item);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    })();
 });
-
-
