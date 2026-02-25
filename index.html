@@ -1,10 +1,12 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donald Laptops | Premium Computer Store</title>
+    <title>Alfred Tech Hub | Institutional Laptop Excellence</title>
+    <meta name="description"
+        content="Premium laptop store trusted by universities and higher institutions. 500+ models, 40+ global brands, institutional grade quality.">
     <link rel="stylesheet" href="style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap"
@@ -16,45 +18,25 @@ a<!DOCTYPE html>
     <!-- OTP and QR Code Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/otpauth@9.1.1/dist/otpauth.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
+    <!-- Animated Laptop Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
     <div class="app-container">
-        <div id="auth-gate" class="auth-overlay">
+        <div id="auth-gate" class="auth-overlay" style="display: none;">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>Donald<span>Laptops</span></h1>
-                    <p id="auth-msg">Please sign in to access the store</p>
+                    <img src="Logo maker project.png" alt="Logo Maker" class="logo-img" style="margin-bottom: 1rem;">
+                    <p id="auth-msg">Please sign in to complete your purchase</p>
                 </div>
-
-                <button id="custom-google-btn" class="google-auth-btn">
-                    <svg width="18" height="18" viewBox="0 0 18 18">
-                        <path
-                            d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
-                            fill="#4285F4" />
-                        <path
-                            d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
-                            fill="#34A853" />
-                        <path
-                            d="M3.964 10.705c-.18-.54-.282-1.117-.282-1.705s.102-1.165.282-1.705V4.963H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.037l3.007-2.332z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.443 2.048.957 4.963L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"
-                            fill="#EA4335" />
-                    </svg>
-                    Continue with Google
-                </button>
-
-                <div class="auth-divider"><span>OR</span></div>
 
                 <div id="login-form-container">
                     <form id="login-form">
                         <input type="email" id="login-email" placeholder="Email Address" required>
-                        <input type="password" id="login-pass" placeholder="Password" required>
+                        <input type="password" id="login-pass" placeholder="Password" required minlength="8">
                         <button type="submit" class="auth-btn">Sign In</button>
                     </form>
                     <p class="auth-switch">Don't have an account? <span id="show-signup">Sign Up</span></p>
@@ -62,18 +44,27 @@ a<!DOCTYPE html>
 
                 <div id="signup-form-container" style="display: none;">
                     <form id="signup-form">
-                        <input type="text" id="signup-name" placeholder="Full Name" required>
+                        <input type="text" id="signup-name" placeholder="Full Name" required minlength="2"
+                            pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces">
                         <input type="email" id="signup-email" placeholder="Email Address" required>
-                        <input type="password" id="signup-pass" placeholder="Password" required>
+                        <input type="password" id="signup-pass" placeholder="Password (min 8 chars)" required
+                            minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            title="Password must be at least 8 characters with uppercase, lowercase, number, and special character">
+                        <div id="password-strength"
+                            style="margin-top: -0.5rem; margin-bottom: 1rem; font-size: 0.85rem; display: none;">
+                            <span id="strength-text"></span>
+                        </div>
                         <button type="submit" class="auth-btn">Create Account</button>
                     </form>
+                    <div class="auth-divider" style="margin: 1.5rem 0 1rem;"><span>OR</span></div>
+                    <div id="google-signup-btn" style="margin-bottom: 1.5rem; display: flex; justify-content: center;">
+                    </div>
                     <p class="auth-switch">Already have an account? <span id="show-login">Login</span></p>
                 </div>
 
                 <div class="auth-footer-links">
                     <a href="privacy.html">Privacy Policy</a>
                 </div>
-
 
                 <div id="tfa-form-container" style="display: none;">
                     <div class="auth-header">
@@ -88,57 +79,126 @@ a<!DOCTYPE html>
                     <p class="auth-switch"><span id="cancel-tfa">Back to Login</span></p>
                 </div>
             </div>
+
+            <!-- Social Login at the bottom of the page -->
+            <div class="auth-footer-social">
+                <div class="auth-divider"><span>OR Login With</span></div>
+                <div id="google-login-btn"></div>
+            </div>
         </div>
 
-        <div class="app-container" id="main-app" style="display: none;">
-            <!-- Sidebar Navigation -->
-            <button id="menu-toggle" class="menu-toggle">☰</button>
-            <aside class="sidebar" id="sidebar">
-                <div class="logo">
-                    <h1>Donald<span>Laptops</span></h1>
-                </div>
-                <nav>
-                    <ul>
+        <div id="main-app" style="display: flex; flex-direction: column; width: 100%; min-height: 100vh;">
+            <!-- Top Navigation Bar -->
+            <nav class="top-nav">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="Logo maker project.png" alt="Logo Maker" class="logo-img">
+                    </div>
+
+                    <ul class="nav-menu" id="nav-menu">
+                        <li class="mobile-search">
+                            <input type="text" class="search-input-field" placeholder="Search products...">
+                        </li>
                         <li class="nav-link active" data-section="store" data-filter="all"><span>Store Home</span></li>
-                        <li class="nav-link" data-section="profile"><span>My Profile</span></li>
                         <li class="nav-link" data-section="faq"><span>FAQs</span></li>
                         <li class="nav-link" data-section="contact"><span>Contact Us</span></li>
-                        <li class="nav-link" data-section="settings"><span>Account Security</span></li>
+                        <li class="nav-link" data-section="settings"><span>Security</span></li>
+                        <li class="mobile-only" onclick="document.getElementById('cart-toggle').click()"><span>Cart
+                                (<span class="cart-count-display">0</span>)</span></li>
+                        <li class="mobile-only auth-link-login" onclick="document.getElementById('login-btn').click()">
+                            <span>Sign In</span>
+                        </li>
+                        <li class="mobile-only auth-link-logout" onclick="document.getElementById('logout-btn').click()"
+                            style="display: none;"><span>Sign Out</span></li>
                     </ul>
-                    <div class="divider"><span>Categories</span></div>
-                    <ul class="categories-nav">
-                        <li data-section="store" data-filter="Gaming"><span>Gaming</span></li>
-                        <li data-section="store" data-filter="Professional"><span>Professional</span></li>
-                        <li data-section="store" data-filter="Business"><span>Business</span></li>
-                        <li data-section="store" data-filter="Ultrabook"><span>Ultrabooks</span></li>
-                    </ul>
-                </nav>
-                <div class="cart-summary" id="cart-toggle">
-                    <span>🛒 Cart</span>
-                    <span id="cart-count">0</span>
+
+                    <div class="nav-actions">
+                        <div class="search-bar">
+                            <input type="text" id="search-input" placeholder="Search...">
+                        </div>
+
+                        <div class="cart-summary" id="cart-toggle">
+                            <span>🛒</span>
+                            <span id="cart-count" class="cart-count-display">0</span>
+                        </div>
+
+                        <div class="user-profile">
+                            <span id="user-full-name"
+                                style="margin-right: 12px; font-weight: 500; font-size: 0.9rem; color: var(--text);"></span>
+                            <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff"
+                                id="user-avatar" alt="User">
+                        </div>
+
+                        <button id="login-btn" class="logout-link" style="display: none;">Sign In</button>
+                        <button id="logout-btn" class="logout-link">Sign Out</button>
+                    </div>
+
+                    <button id="menu-toggle" class="menu-toggle">MENU ☰</button>
                 </div>
-                <button id="logout-btn" class="logout-btn"><span>Sign Out</span></button>
-                <a href="privacy.html" class="privacy-sidebar-link">Privacy Policy</a>
-            </aside>
+
+            </nav>
+
+            <div class="sub-nav">
+                <ul class="categories-nav" id="categories-nav">
+                    <li class="cat-active" data-section="store" data-filter="all"><span>🏠 All</span></li>
+                    <li data-section="store" data-filter="Gaming"><span>🎮 Gaming</span></li>
+                    <li data-section="store" data-filter="Professional"><span>💼 Professional</span></li>
+                    <li data-section="store" data-filter="Business"><span>🏢 Business</span></li>
+                    <li data-section="store" data-filter="Ultrabook"><span>⚡ Ultrabooks</span></li>
+                    <li data-section="store" data-filter="Workstation"><span>🖥️ Workstation</span></li>
+                    <li data-section="store" data-filter="Creative"><span>🎨 Creative</span></li>
+                    <li data-section="store" data-filter="Student"><span>🎓 Student</span></li>
+                    <li data-section="store" data-filter="Budget"><span>💰 Budget</span></li>
+                    <li data-section="store" data-filter="Convertible"><span>🔄 Convertible</span></li>
+                    <li data-section="store" data-filter="Rugged"><span>🛡️ Rugged</span></li>
+                </ul>
+            </div>
 
             <!-- Main Content -->
             <main class="content">
-                <header>
-                    <div class="search-bar">
-                        <input type="text" id="search-input" placeholder="Search by brand or model...">
-                    </div>
-                    <div class="user-profile">
-                        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="user-avatar"
-                            alt="User">
-                    </div>
-                </header>
 
                 <!-- Store View -->
                 <div id="store-section" class="content-section active">
                     <section class="hero">
-                        <div class="hero-text">
-                            <h2>Elevate Your Performance</h2>
-                            <p>Discover the finest collection of high-performance laptops from over 40 top brands.</p>
+                        <div class="hero-inner">
+                            <span class="hero-badge">🎓 Trusted by Higher Institutions &amp; Universities</span>
+                            <h2 class="hero-title">Premier Laptop <span class="gradient-text">Excellence Hub</span></h2>
+                            <p class="hero-subtitle">The most comprehensive institutional-grade laptop platform in Ghana
+                                — featuring 500+ models from 40+ world-class brands, curated for academia, research, and
+                                professional excellence.</p>
+                            <div class="hero-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">500+</span>
+                                    <span class="stat-label">Laptop Models</span>
+                                </div>
+                                <div class="stat-divider"></div>
+                                <div class="stat-item">
+                                    <span class="stat-number">40+</span>
+                                    <span class="stat-label">Global Brands</span>
+                                </div>
+                                <div class="stat-divider"></div>
+                                <div class="stat-item">
+                                    <span class="stat-number">2yr</span>
+                                    <span class="stat-label">Warranty</span>
+                                </div>
+                                <div class="stat-divider"></div>
+                                <div class="stat-item">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="institutional-banner">
+                        <div class="banner-content">
+                            <div class="banner-text">
+                                <span class="badge-mini">PROMO</span>
+                                <h3>Student & Faculty Exclusive</h3>
+                                <p>Get an additional 15% off and extended 3-year warranty with your university email.
+                                </p>
+                            </div>
+                            <button class="banner-btn">Verify Institution</button>
                         </div>
                     </section>
 
@@ -204,85 +264,6 @@ a<!DOCTYPE html>
                             <textarea name="message" placeholder="How can we help you?" rows="5" required></textarea>
                             <button type="submit" class="auth-btn">Send Message</button>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Profile View -->
-                <div id="profile-section" class="content-section">
-                    <h2 class="section-title">My Profile</h2>
-                    <div class="profile-container">
-                        <!-- Profile Header Card -->
-                        <div class="profile-header-card">
-                            <div class="profile-avatar-section">
-                                <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="profile-avatar-display" alt="Profile Avatar">
-                                <div class="profile-basic-info">
-                                    <h3 id="profile-name-display">User Name</h3>
-                                    <p id="profile-email-display">user@example.com</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Edit Profile Form -->
-                        <div class="settings-card">
-                            <h3>Personal Information</h3>
-                            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Update your personal details and contact information.</p>
-                            
-                            <form id="profile-form" class="profile-form">
-                                <div class="input-group">
-                                    <label>Full Name</label>
-                                    <input type="text" id="profile-name" placeholder="Enter your full name" required>
-                                </div>
-                                
-                                <div class="input-group">
-                                    <label>Email Address</label>
-                                    <input type="email" id="profile-email" placeholder="your.email@example.com" required>
-                                </div>
-                                
-                                <div class="input-group">
-                                    <label>Phone Number</label>
-                                    <input type="tel" id="profile-phone" placeholder="+233 XX XXX XXXX">
-                                </div>
-                                
-                                <div class="input-group full">
-                                    <label>Address</label>
-                                    <textarea id="profile-address" placeholder="Enter your full address" rows="3"></textarea>
-                                </div>
-                                
-                                <div class="input-group">
-                                    <label>City</label>
-                                    <input type="text" id="profile-city" placeholder="City, Region">
-                                </div>
-                                
-                                <div class="input-group">
-                                    <label>Country</label>
-                                    <input type="text" id="profile-country" placeholder="Country">
-                                </div>
-                                
-                                <div class="profile-form-actions">
-                                    <button type="submit" class="auth-btn">Save Changes</button>
-                                    <button type="button" id="cancel-profile-edit" class="auth-btn" style="background: var(--text-muted);">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Account Statistics -->
-                        <div class="settings-card">
-                            <h3>Account Statistics</h3>
-                            <div class="profile-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Total Orders</span>
-                                    <span class="stat-value" id="total-orders">0</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Account Created</span>
-                                    <span class="stat-value" id="account-created">Recently</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Last Login</span>
-                                    <span class="stat-value" id="last-login">Just now</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -368,7 +349,9 @@ a<!DOCTYPE html>
                     </div>
                     <div class="input-group">
                         <label>Phone Number</label>
-                        <input type="tel" id="delivery-phone" placeholder="+233 XX XXX XXXX" required>
+                        <input type="tel" id="delivery-phone" placeholder="+233 XX XXX XXXX" required
+                            pattern="[\+]?[0-9\s\-]+"
+                            title="Please enter a valid phone number (numbers, spaces, +, and - only)">
                     </div>
                     <div class="input-group full">
                         <label>Street Address</label>
@@ -386,7 +369,30 @@ a<!DOCTYPE html>
                 </div>
             </div>
         </div>
-        <script src="firebase-config.js"></script>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <p class="copyright">&copy; 2026 Logo Maker. All Rights Reserved.</p>
+                </div>
+                <div class="footer-section social-links">
+                    <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="https://twitter.com" target="_blank" aria-label="X (Twitter)"><i
+                            class="fab fa-x-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://snapchat.com" target="_blank" aria-label="Snapchat"><i
+                            class="fab fa-snapchat"></i></a>
+                </div>
+            </div>
+            <div id="footer-google-login-container"
+                style="display: flex; justify-content: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div id="google-footer-btn"></div>
+            </div>
+        </footer>
+
         <script src="script.js"></script>
 </body>
 
