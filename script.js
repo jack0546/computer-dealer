@@ -7,53 +7,66 @@ document.addEventListener('DOMContentLoaded', () => {
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
         CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'Logo Maker'
+        STORE_NAME: 'Alfred Tech Hub'
     };
+
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCgbzdVCNPtjjlGNW4ug_3PJ92ajetw3i0",
+        authDomain: "donald-laptops.firebaseapp.com",
+        projectId: "donald-laptops",
+        storageBucket: "donald-laptops.firebasestorage.app",
+        messagingSenderId: "856741060528",
+        appId: "1:856741060528:web:9c99a0a3a80fb044378075",
+        measurementId: "G-VD0G6B1PZG"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
     // ---------------------------------------------------------
     // 1. DATA & STATE
     // ---------------------------------------------------------
     const laptops = [
-        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 0.01, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 0.01, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
-        { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 0.01, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 0.01, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 0.01, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creative" },
-        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
-        { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 18, "name": "Portégé X30L-K", "brand": "Dynabook", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 19, "name": "VAIO Z", "brand": "VAIO", "price": 0.01, "specs": "i7, 32GB RAM, 2TB SSD, Carbon Fiber", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 20, "name": "Framework Laptop 13", "brand": "Framework", "price": 0.01, "specs": "Modular, i5/i7/Ryzen", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 21, "name": "Lemur Pro", "brand": "System76", "price": 0.01, "specs": "i5/i7, Coreboot, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 22, "name": "Librem 14", "brand": "Purism", "price": 0.01, "specs": "i7, Privacy Switches, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 23, "name": "B360", "brand": "Getac", "price": 0.01, "specs": "i7, Fully Rugged, Sunlight Readable", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
-        { "id": 24, "name": "CoreBook X", "brand": "Chuwi", "price": 0.01, "specs": "i5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 25, "name": "INBook X2", "brand": "Infinix", "price": 0.01, "specs": "i3/i5, Thin & Light, Colorful", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Student" },
-        { "id": 26, "name": "MagicBook 14", "brand": "Honor", "price": 0.01, "specs": "Ryzen 5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
-        { "id": 27, "name": "Book Slim", "brand": "Realme", "price": 0.01, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
-        { "id": 28, "name": "ZBook Studio", "brand": "Sony", "price": 0.01, "specs": "i9, 64GB RAM, 4K Display", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
-        { "id": 29, "name": "Tecra A50", "brand": "Toshiba", "price": 0.01, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
-        { "id": 30, "name": "Presario", "brand": "Compaq", "price": 0.01, "specs": "i3, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 31, "name": "NV Series", "brand": "Gateway", "price": 0.01, "specs": "Pentium Gold, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 32, "name": "EasyNote", "brand": "Packard Bell", "price": 0.01, "specs": "Celeron, 4GB RAM, 128GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 33, "name": "Nightsky RX315", "brand": "Eurocom", "price": 0.01, "specs": "i9, 64GB RAM, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
-        { "id": 34, "name": "Akoya", "brand": "Medion", "price": 0.01, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 35, "name": "Vision 14", "brand": "Schenker", "price": 0.01, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
-        { "id": 36, "name": "InfinityBook", "brand": "TUXEDO", "price": 0.01, "specs": "i7, Linux, 16GB RAM", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
-        { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 0.01, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
-        { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 0.01, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
-        { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 0.01, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
-        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 0.01, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
+        { "id": 1, "name": "MacBook Pro 16", "brand": "Apple", "price": 1, "specs": "M3 Max, 32GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 2, "name": "XPS 15", "brand": "Dell", "price": 1, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4060", "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 3, "name": "ThinkPad X1 Carbon", "brand": "Lenovo", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 4, "name": "Zephyrus G14", "brand": "ASUS", "price": 1, "specs": "Ryzen 9, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 5, "name": "Spectre x360", "brand": "HP", "price": 1, "specs": "i7, 16GB RAM, 1TB SSD, OLED", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
+        { "id": 6, "name": "Blade 15", "brand": "Razer", "price": 1, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4080", "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 7, "name": "Surface Laptop 5", "brand": "Microsoft", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 8, "name": "Swift Edge 16", "brand": "Acer", "price": 1, "specs": "Ryzen 7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 9, "name": "Stealth 16 Studio", "brand": "MSI", "price": 1, "specs": "i7, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 10, "name": "Galaxy Book3 Ultra", "brand": "Samsung", "price": 1, "specs": "i9, 32GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 11, "name": "m18 R1", "brand": "Alienware", "price": 1, "specs": "i9, 32GB RAM, 2TB SSD, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 12, "name": "AERO 16 OLED", "brand": "Gigabyte", "price": 1, "specs": "i7, 16GB RAM, 1TB SSD, RTX 4070", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Creative" },
+        { "id": 13, "name": "Gram 17", "brand": "LG", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 14, "name": "Lifebook U9311", "brand": "Fujitsu", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD, LTE", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 15, "name": "Toughbook 55", "brand": "Panasonic", "price": 1, "specs": "i5, 16GB RAM, 512GB SSD, Rugged", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
+        { "id": 16, "name": "MateBook X Pro", "brand": "Huawei", "price": 1, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 17, "name": "Mi Notebook Pro", "brand": "Xiaomi", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 18, "name": "Portégé X30L-K", "brand": "Dynabook", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 19, "name": "VAIO Z", "brand": "VAIO", "price": 1, "specs": "i7, 32GB RAM, 2TB SSD, Carbon Fiber", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 20, "name": "Framework Laptop 13", "brand": "Framework", "price": 1, "specs": "Modular, i5/i7/Ryzen", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 21, "name": "Lemur Pro", "brand": "System76", "price": 1, "specs": "i5/i7, Coreboot, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 22, "name": "Librem 14", "brand": "Purism", "price": 1, "specs": "i7, Privacy Switches, Linux", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 23, "name": "B360", "brand": "Getac", "price": 1, "specs": "i7, Fully Rugged, Sunlight Readable", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Rugged" },
+        { "id": 24, "name": "CoreBook X", "brand": "Chuwi", "price": 1, "specs": "i5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 25, "name": "INBook X2", "brand": "Infinix", "price": 1, "specs": "i3/i5, Thin & Light, Colorful", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 26, "name": "MagicBook 14", "brand": "Honor", "price": 1, "specs": "Ryzen 5, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 27, "name": "Book Slim", "brand": "Realme", "price": 1, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Student" },
+        { "id": 28, "name": "ZBook Studio", "brand": "Sony", "price": 1, "specs": "i9, 64GB RAM, 4K Display", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 29, "name": "Tecra A50", "brand": "Toshiba", "price": 1, "specs": "i7, 16GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Business" },
+        { "id": 30, "name": "Presario", "brand": "Compaq", "price": 1, "specs": "i3, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 31, "name": "NV Series", "brand": "Gateway", "price": 1, "specs": "Pentium Gold, 8GB RAM, 256GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 32, "name": "EasyNote", "brand": "Packard Bell", "price": 1, "specs": "Celeron, 4GB RAM, 128GB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 33, "name": "Nightsky RX315", "brand": "Eurocom", "price": 1, "specs": "i9, 64GB RAM, RTX 4090", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 34, "name": "Akoya", "brand": "Medion", "price": 1, "specs": "i5, 8GB RAM, 512GB SSD", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 35, "name": "Vision 14", "brand": "Schenker", "price": 1, "specs": "i7, 16GB RAM, 1TB SSD", "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&q=80&w=400", "category": "Workstation" },
+        { "id": 36, "name": "InfinityBook", "brand": "TUXEDO", "price": 1, "specs": "i7, Linux, 16GB RAM", "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400", "category": "Professional" },
+        { "id": 37, "name": "Pinebook Pro", "brand": "Pine64", "price": 1, "specs": "ARM, Linux, 4GB RAM", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Budget" },
+        { "id": 38, "name": "Win Max 2", "brand": "GPD", "price": 1, "specs": "Ryzen 7, 16GB RAM, Handheld", "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=400", "category": "Gaming" },
+        { "id": 39, "name": "OneMix 4", "brand": "One-Netbook", "price": 1, "specs": "i7, 16GB RAM, 10-inch", "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=400", "category": "Ultrabook" },
+        { "id": 40, "name": "MaxBook Y13", "brand": "BMAX", "price": 1, "specs": "i3, 8GB RAM, Convertible", "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400", "category": "Convertible" },
         // Expanded Inventory — 750 dynamically generated laptops (IDs 41–790)
         ...Array.from({ length: 750 }, (_, i) => {
             const id = i + 41;
@@ -95,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id,
                 name: `${brand} ${category} Pro ${id}`,
                 brand,
-                price: 0.01,
+                price: 1,
                 specs: `${cpu}, ${ram}GB RAM, ${storage}GB SSD, ${gpu}`,
                 image: `https://images.unsplash.com/photo-${imageId}?auto=format&fit=crop&q=80&w=400`,
                 category
@@ -104,11 +117,26 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let cart = [];
-    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-    let pendingUser = null; // Used during 2FA verification step
-    let tempSecret = null; // Used during 2FA setup
-    let pendingCheckout = false; // NEW: Track if login was triggered by checkout
-    let inactivityTimer; // Declared early so checkAuth() can safely call clearTimeout on it
+    let currentUser = null;
+    let pendingUser = null;
+    let tempSecret = null;
+    let pendingCheckout = false;
+    let inactivityTimer;
+
+    // FIREBASE AUTH LISTENER
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUser = {
+                uid: user.uid,
+                name: user.displayName || user.email.split('@')[0],
+                email: user.email,
+                avatar: user.photoURL
+            };
+        } else {
+            currentUser = null;
+        }
+        checkAuth();
+    });
 
     // ---------------------------------------------------------
     // 2. DOM ELEMENTS
@@ -234,141 +262,49 @@ document.addEventListener('DOMContentLoaded', () => {
         navMenu.classList.toggle('active');
     };
     function initGoogleLogin() {
-        // DETECT LOCAL FILE PROTOCOL TO FIX OAUTH ERROR
-        if (window.location.protocol === 'file:') {
-            console.log("Running locally: Enabling Mock Google Login");
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            if (googleLoginBtn) {
-                googleLoginBtn.innerHTML = `
-                    <button type="button" id="mock-google-btn" style="
-                        display: flex; align-items: center; justify-content: center; width: 100%; 
-                        padding: 10px; background: white; color: #3c4043; border: 1px solid #dadce0; 
-                        border-radius: 20px; font-family: 'Google Sans', arial, sans-serif; font-weight: 500; 
-                        cursor: pointer; font-size: 14px; transition: background 0.2s;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
-                             style="width: 18px; height: 18px; margin-right: 10px;">
-                        Continue with Google (Dev Mode)
+        if (location.protocol === 'file:') {
+            console.warn("Google OAuth will not work when opening the file directly (file://). Please use the 'run_locally.bat' script.");
+            const authMsg = document.getElementById('auth-msg');
+            if (authMsg) authMsg.innerHTML = '<span style="color:#ef4444">⚠ Error: Opening as file. Use a local server (run_locally.bat) to sign in with Google.</span>';
+        }
+
+        const buttons = [
+            document.getElementById('google-login-btn'),
+            document.getElementById('google-signup-btn'),
+            document.getElementById('google-footer-btn')
+        ];
+
+        buttons.forEach(btn => {
+            if (btn) {
+                btn.innerHTML = `
+                    <button class="auth-btn google-btn" style="background:#fff; color:#444; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px; width:100%; border-radius:50px; padding:12px; font-weight:600; cursor:pointer;">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                        Continue with Google
                     </button>
-                    <p style="text-align: center; font-size: 0.75rem; color: #ef4444; margin-top: 5px;">
-                        *Local file detected: Using simulated login to bypass OAuth errors
-                    </p>
                 `;
-
-                const mockBtn = document.getElementById('mock-google-btn');
-                if (mockBtn) {
-                    mockBtn.onclick = () => {
-                        const mockEmail = prompt("Enter a test email for Google Login:", "test-user@gmail.com");
-                        if (!mockEmail) return;
-
-                        const mockPayload = {
-                            name: "Google User (Dev)",
-                            email: mockEmail,
-                            picture: `https://ui-avatars.com/api/?name=Google+User&background=random`,
-                            exp: Math.floor(Date.now() / 1000) + 3600
-                        };
-
-                        const cleanBase64 = btoa(JSON.stringify(mockPayload));
-                        const mockCredential = `header.${cleanBase64}.signature`;
-
-                        handleGoogleResponse({ credential: mockCredential });
-                    };
-                }
+                btn.onclick = handleGoogleSignIn;
             }
-            return;
-        }
-
-        if (typeof google === 'undefined') {
-            setTimeout(initGoogleLogin, 500); // SDK not ready, retry
-            return;
-        }
-
-        google.accounts.id.initialize({
-            client_id: CONFIG.GOOGLE_CLIENT_ID,
-            callback: handleGoogleResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true
         });
-
-        const googleLoginBtn = document.getElementById('google-login-btn');
-        if (googleLoginBtn) {
-            google.accounts.id.renderButton(
-                googleLoginBtn,
-                {
-                    theme: "outline",
-                    size: "large",
-                    width: "100%",
-                    text: "signin_with",
-                    shape: "pill"
-                }
-            );
-        }
-
-        const googleSignUpBtn = document.getElementById('google-signup-btn');
-        if (googleSignUpBtn) {
-            google.accounts.id.renderButton(
-                googleSignUpBtn,
-                {
-                    theme: "outline",
-                    size: "large",
-                    width: "100%",
-                    text: "signup_with",
-                    shape: "pill"
-                }
-            );
-        }
-
-        const googleFooterBtn = document.getElementById('google-footer-btn');
-        if (googleFooterBtn) {
-            google.accounts.id.renderButton(
-                googleFooterBtn,
-                {
-                    theme: "outline",
-                    size: "large",
-                    width: "100%",
-                    text: "signin_with",
-                    shape: "pill"
-                }
-            );
-        }
-        google.accounts.id.prompt();
     }
 
-    function handleGoogleResponse(response) {
-        // In a real app, you'd send this JWT to your server to verify
-        // For this local demo, we'll decode the JWT payload to get user info
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-
-        const gUser = {
-            name: payload.name,
-            email: payload.email.toLowerCase(),
-            avatar: payload.picture,
-            googleUser: true, // Mark as a Google-integrated user
-            lastLogin: new Date().toISOString() // Track last login
-        };
-
-        // Persistent Signup Logic (Automatic Registration)
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const existingUser = users.find(u => u.email === gUser.email);
-
-        if (!existingUser) {
-            // First time visit - register the user with signup date
-            gUser.signupDate = new Date().toISOString();
-            users.push(gUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            console.log("New User Registered via Google:", gUser.email, "on", gUser.signupDate);
-        } else {
-            // Returning user - update their profile and last login
-            const index = users.findIndex(u => u.email === gUser.email);
-            users[index] = { ...users[index], ...gUser, signupDate: users[index].signupDate }; // Preserve original signup date
-            localStorage.setItem('users', JSON.stringify(users));
-            // Use the data from high-security storage (existing user records)
-            currentUser = users[index];
-            console.log("User logged in via Google:", currentUser.email, "Last login:", currentUser.lastLogin);
+    async function handleGoogleSignIn() {
+        if (location.protocol === 'file:') {
+            alert("Error: You cannot sign in with Google when opening index.html directly. Please use 'run_locally.bat'.");
+            return;
         }
 
-        localStorage.setItem('currentUser', JSON.stringify(currentUser || gUser));
-        currentUser = currentUser || gUser;
-        checkAuth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            await auth.signInWithPopup(provider);
+            console.log("Firebase: Successfully signed in with Google Popup");
+        } catch (error) {
+            console.error("Firebase Google Auth Error:", error);
+            if (error.code === 'auth/unauthorized-domain') {
+                alert("Error: This domain (localhost) is not authorized in your Firebase Console. Please add 'localhost' to Authorized Domains in Firebase Authentication settings.");
+            } else {
+                alert("Google Sign-in failed: " + error.message);
+            }
+        }
     }
 
     function checkAuth() {
@@ -442,85 +378,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cancelTfa.onclick = () => showLogin.onclick();
 
-    signupForm.onsubmit = (e) => {
+    signupForm.onsubmit = async (e) => {
         e.preventDefault();
         const name = document.getElementById('signup-name').value.trim();
         const email = document.getElementById('signup-email').value.trim().toLowerCase();
         const pass = document.getElementById('signup-pass').value;
 
-        // Validate password strength
-        const passwordValidation = validatePasswordStrength(pass);
-        if (!passwordValidation.isValid) {
-            let missing = [];
-            if (!passwordValidation.minLength) missing.push('at least 8 characters');
-            if (!passwordValidation.hasUpperCase) missing.push('uppercase letter');
-            if (!passwordValidation.hasLowerCase) missing.push('lowercase letter');
-            if (!passwordValidation.hasNumber) missing.push('number');
-            if (!passwordValidation.hasSpecialChar) missing.push('special character (@$!%*?&)');
-
-            alert(`❌ Password is too weak!\n\nYour password must include:\n• ${missing.join('\n• ')}\n\nPlease create a stronger password.`);
+        const validation = validatePasswordStrength(pass);
+        if (!validation.isValid) {
+            alert("Please use a stronger password.");
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-
-        // CHECK FOR DUPLICATE EMAIL (ONE-TIME REGISTRATION)
-        const existingUser = users.find(u => u.email.toLowerCase() === email);
-        if (existingUser) {
-            alert(`⚠️ EMAIL ALREADY REGISTERED\n\nThe email "${email}" is already associated with an account.\n\nPlease:\n• Login with your existing account, or\n• Use a different email address to create a new account`);
-            return;
+        try {
+            const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+            await userCredential.user.updateProfile({ displayName: name });
+            alert(`🎉 Account Created Successfully!\nWelcome, ${name}!`);
+        } catch (error) {
+            alert("Signup failed: " + error.message);
         }
-
-        // Validate name (letters and spaces only)
-        if (!/^[A-Za-z\s]+$/.test(name)) {
-            alert('❌ Invalid Name\n\nPlease enter a valid name using only letters and spaces.');
-            return;
-        }
-
-        const newUser = {
-            name,
-            email,
-            pass,
-            signupDate: new Date().toISOString(),
-            lastLogin: new Date().toISOString()
-        };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-        currentUser = newUser;
-        console.log("✅ New User Registered:", newUser.email, "on", newUser.signupDate);
-        alert(`🎉 Account Created Successfully!\n\nWelcome, ${newUser.name}!\nYour account has been created.`);
-        checkAuth();
     };
 
-    loginForm.onsubmit = (e) => {
+    loginForm.onsubmit = async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-pass').value;
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-
-        const user = users.find(u => u.email === email && u.pass === pass);
-
-        if (user) {
-            // Update last login time
-            user.lastLogin = new Date().toISOString();
-            const userIndex = users.findIndex(u => u.email === email);
-            users[userIndex] = user;
-            localStorage.setItem('users', JSON.stringify(users));
-
-            if (user.tfaEnabled) {
-                pendingUser = user;
-                document.getElementById('login-form-container').style.display = 'none';
-                tfaFormContainer.style.display = 'block';
-            } else {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                currentUser = user;
-                console.log("User logged in:", user.email, "Last login:", user.lastLogin);
-                checkAuth();
-            }
-        } else {
-            alert('Invalid email or password!');
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+        } catch (error) {
+            alert("Login failed: " + error.message);
         }
     };
 
@@ -553,14 +440,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleLogout(isTimeout = false) {
-        localStorage.removeItem('currentUser');
-        currentUser = null;
-        clearTimeout(inactivityTimer);
-        checkAuth();
-
-        if (isTimeout) {
-            alert('Your session has timed out due to 10 minutes of inactivity for security.');
-        }
+        auth.signOut().then(() => {
+            clearTimeout(inactivityTimer);
+            if (isTimeout) {
+                alert('Your session has timed out due to 10 minutes of inactivity for security.');
+            }
+        });
     }
 
     // Event listeners to reset the timer on user activity
