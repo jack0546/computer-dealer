@@ -378,6 +378,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cancelTfa.onclick = () => showLogin.onclick();
 
+    const localUser = {
+                    uid: user.uid,
+                    name: user.displayName || 'User',
+                    email: user.email,
+                    createdAt: user.metadata.creationTime,
+                    lastLogin: user.metadata.lastSignInTime
+                };
+
+                localStorage.setItem('currentUser', JSON.stringify(localUser));
+                currentUser = localUser;
+                const authModal = document.getElementById('auth-modal');
+                if (authModal) authModal.style.display = 'none';
+                checkAuth();
+            } catch (error) {
+                alert('Invalid email or password!');
+            }
+        }
+    };
+
+    // Forgot Password Logic
+    showForgotPassBtn.onclick = () => {
+        loginFormContainer.style.display = 'none';
+        forgotPassContainer.style.display = 'block';
+    };
+
     signupForm.onsubmit = async (e) => {
         e.preventDefault();
         const name = document.getElementById('signup-name').value.trim();
@@ -1072,3 +1097,4 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     })();
 });
+
