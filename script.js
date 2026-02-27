@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Firebase Google Auth Error:", error);
             if (error.code === 'auth/unauthorized-domain') {
-                alert("Error: This domain (localhost) is not authorized in your Firebase Console. Please add 'localhost' to Authorized Domains in Firebase Authentication settings.");
+                alert(`Error: This domain (${window.location.hostname}) is not authorized in your Firebase Console. Please add '${window.location.hostname}' to Authorized Domains in Firebase Authentication settings.`);
             } else {
                 alert("Google Sign-in failed: " + error.message);
             }
