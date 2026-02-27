@@ -255,12 +255,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---------------------------------------------------------
-    // 4. AUTHENTICATION LOGIC
-    // ---------------------------------------------------------
+    // Auth Modal DOM Elements
+    const loginFormContainer = document.getElementById('login-form-container');
+    const signupFormContainer = document.getElementById('signup-form-container');
+    const forgotPassContainer = document.getElementById('forgot-pass-container');
+    const forgotPassForm = document.getElementById('forgot-pass-form');
+    const showForgotPassBtn = document.getElementById('show-forgot-pass');
+    const backToLoginBtn = document.getElementById('back-to-login');
+
+    function switchAuthView(viewName) {
+        // Hide all containers
+        loginFormContainer.style.display = 'none';
+        signupFormContainer.style.display = 'none';
+        forgotPassContainer.style.display = 'none';
+        tfaFormContainer.style.display = 'none';
+
+        // Show requested container
+        if (viewName === 'login') loginFormContainer.style.display = 'block';
+        else if (viewName === 'signup') signupFormContainer.style.display = 'block';
+        else if (viewName === 'forgot') forgotPassContainer.style.display = 'block';
+        else if (viewName === 'tfa') tfaFormContainer.style.display = 'block';
+    }
+
     menuToggle.onclick = () => {
         navMenu.classList.toggle('active');
     };
+
     function initGoogleLogin() {
         if (location.protocol === 'file:') {
             console.warn("Google OAuth will not work when opening the file directly (file://). Please use the 'run_locally.bat' script.");
@@ -297,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await auth.signInWithPopup(provider);
             console.log("Firebase: Successfully signed in with Google Popup");
+            authGate.style.display = 'none';
         } catch (error) {
             console.error("Firebase Google Auth Error:", error);
             if (error.code === 'auth/unauthorized-domain') {
@@ -330,22 +351,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const avatarEl = document.getElementById('user-avatar');
             if (avatarEl) avatarEl.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=6366f1&color=fff`;
             renderProducts(laptops);
-            resetInactivityTimer(); // Start tracking inactivity
+            resetInactivityTimer();
 
-            // If user logged in during checkout, resume checkout
             if (pendingCheckout) {
                 pendingCheckout = false;
                 handleCheckout();
             }
         } else {
-            // Keep store visible for guests, but hide certain features
             authGate.style.display = 'none';
             mainApp.style.display = 'flex';
             if (userFullName) userFullName.textContent = 'Guest';
             if (loginBtn) loginBtn.style.display = 'block';
             if (logoutBtn) logoutBtn.style.display = 'none';
 
-            // Mobile Nav Updates
             mobileLoginLinks.forEach(el => el.style.display = 'block');
             mobileLogoutLinks.forEach(el => el.style.display = 'none');
 
@@ -359,50 +377,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Auth Switchers
     if (document.getElementById('login-btn')) {
         document.getElementById('login-btn').onclick = () => {
             authGate.style.display = 'flex';
+            switchAuthView('login');
         };
     }
 
-    showSignup.onclick = () => {
-        document.getElementById('login-form-container').style.display = 'none';
-        document.getElementById('signup-form-container').style.display = 'block';
-    };
+    showSignup.onclick = () => switchAuthView('signup');
+    showLogin.onclick = () => switchAuthView('login');
+    showForgotPassBtn.onclick = () => switchAuthView('forgot');
+    backToLoginBtn.onclick = () => switchAuthView('login');
+    cancelTfa.onclick = () => switchAuthView('login');
 
-    showLogin.onclick = () => {
-        document.getElementById('signup-form-container').style.display = 'none';
-        document.getElementById('tfa-form-container').style.display = 'none';
-        document.getElementById('login-form-container').style.display = 'block';
-    };
-
-    cancelTfa.onclick = () => showLogin.onclick();
-
-    const localUser = {
-                    uid: user.uid,
-                    name: user.displayName || 'User',
-                    email: user.email,
-                    createdAt: user.metadata.creationTime,
-                    lastLogin: user.metadata.lastSignInTime
-                };
-
-                localStorage.setItem('currentUser', JSON.stringify(localUser));
-                currentUser = localUser;
-                const authModal = document.getElementById('auth-modal');
-                if (authModal) authModal.style.display = 'none';
-                checkAuth();
-            } catch (error) {
-                alert('Invalid email or password!');
-            }
-        }
-    };
-
-    // Forgot Password Logic
-    showForgotPassBtn.onclick = () => {
-        loginFormContainer.style.display = 'none';
-        forgotPassContainer.style.display = 'block';
-    };
-
+    // Form Submissions
     signupForm.onsubmit = async (e) => {
         e.preventDefault();
         const name = document.getElementById('signup-name').value.trim();
@@ -419,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
             await userCredential.user.updateProfile({ displayName: name });
             alert(`🎉 Account Created Successfully!\nWelcome, ${name}!`);
+            authGate.style.display = 'none';
         } catch (error) {
             alert("Signup failed: " + error.message);
         }
@@ -431,8 +421,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             await auth.signInWithEmailAndPassword(email, pass);
+            authGate.style.display = 'none';
         } catch (error) {
             alert("Login failed: " + error.message);
+        }
+    };
+
+    forgotPassForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('forgot-email').value;
+        try {
+            await auth.sendPasswordResetEmail(email);
+            alert('Password reset link sent! Please check your email inbox.');
+            switchAuthView('login');
+        } catch (error) {
+            alert('Error: ' + error.message);
         }
     };
 
@@ -440,10 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const code = tfaCodeInput.value;
         if (verifyOTP(pendingUser.tfaSecret, code)) {
-            localStorage.setItem('currentUser', JSON.stringify(pendingUser));
             currentUser = pendingUser;
             pendingUser = null;
             tfaCodeInput.value = '';
+            authGate.style.display = 'none';
             checkAuth();
         } else {
             alert('Invalid 2FA code. Please try again.');
@@ -1097,4 +1100,5 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     })();
 });
+
 
