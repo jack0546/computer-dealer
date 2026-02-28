@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 0. CONFIGURATION
     // ---------------------------------------------------------
     const CONFIG = {
-        PAYSTACK_PUBLIC_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888', // UPDATED WITH LIVE PUBLIC KEY
-        GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
+        PAYSTACK_LIVE_KEY: 'pk_live_6b9968065dc0bd4842c97ffa138e49127c862888',
+        PAYSTACK_TEST_KEY: 'pk_test_9f6d71b5061bfc2a7ca155420c214550e4f72ae2', // UPDATED TEST KEY
+        GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com',
         CURRENCY: 'GHS',
-        CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'Alfred Tech Hub',
-        ADMIN_EMAIL: 'narhsnazzisco@gmail.com' // Defining the owner/admin
+        CONVERSION_RATE_USD_TO_GHS: 14.77,
+        STORE_NAME: 'Donald Laptops',
+        ADMIN_EMAIL: 'narhsnazzisco@gmail.com'
     };
 
     // Firebase Configuration
@@ -832,55 +833,41 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function payWithPaystack(amountUSD, delivery) {
-        console.log("Paystack: Starting initialization...");
-        console.log("Paystack: Key being used:", CONFIG.PAYSTACK_PUBLIC_KEY.substring(0, 7) + "...");
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const ACTIVE_KEY = isLocal ? CONFIG.PAYSTACK_TEST_KEY : CONFIG.PAYSTACK_LIVE_KEY;
 
-        // AUTO-DETECT LIVE KEY ON LOCALHOST
-        if (window.location.hostname === "localhost" && CONFIG.PAYSTACK_PUBLIC_KEY.startsWith("pk_live")) {
-            console.error("PAYSTACK ERROR: You are using a LIVE key on localhost. This will NOT work.");
-            alert("❌ CANNOT INITIALIZE PAYMENT: You are using a 'pk_live' key on Localhost. Paystack blocks live payments on local servers. Please use your 'pk_test' key for testing.");
+        console.log("Paystack: Starting initialization...");
+        console.log("Paystack: Mode:", isLocal ? "TEST MODE" : "LIVE MODE");
+
+        if (isLocal && ACTIVE_KEY.startsWith("pk_test_YOUR_TEST")) {
+            alert("❌ SETUP REQUIRED:\nPlease replace 'pk_test_YOUR_TEST_KEY_HERE' in script.js with your actual test key from Paystack.");
             return;
         }
 
         if (typeof PaystackPop === 'undefined') {
-            alert("❌ ERROR: Paystack library is not loaded. Please check your internet connection and refresh.");
+            alert("❌ ERROR: Paystack library did not load.");
             return;
         }
 
-        // Convert USD to GHS for Paystack (if needed for local payment methods like Momo)
+        if (!currentUser) {
+            alert("❌ ERROR: You must be signed in to pay.");
+            return;
+        }
+
         const amountGHS = amountUSD * CONFIG.CONVERSION_RATE_USD_TO_GHS;
         const amountInPesewas = Math.round(amountGHS * 100);
 
         try {
             let handler = PaystackPop.setup({
-                key: CONFIG.PAYSTACK_PUBLIC_KEY,
+                key: ACTIVE_KEY,
                 email: currentUser.email,
                 amount: amountInPesewas,
                 currency: CONFIG.CURRENCY,
                 ref: 'DONALD-' + Math.floor((Math.random() * 1000000000) + 1),
-                channels: ['card', 'bank', 'bank_transfer', 'mobile_money'],
                 metadata: {
                     custom_fields: [
-                        {
-                            display_name: "Customer Name",
-                            variable_name: "customer_name",
-                            value: currentUser.name
-                        },
-                        {
-                            display_name: "Delivery Address",
-                            variable_name: "delivery_address",
-                            value: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`
-                        },
-                        {
-                            display_name: "Cart Summary",
-                            variable_name: "cart_summary",
-                            value: cart.map(item => item.name).join(', ')
-                        },
-                        {
-                            display_name: "Payout Account",
-                            variable_name: "payout_account",
-                            value: "2061250008399"
-                        }
+                        { display_name: "Customer", variable_name: "customer", value: currentUser.displayName || currentUser.name },
+                        { display_name: "Delivery", variable_name: "delivery", value: `${delivery.name}, ${delivery.phone}, ${delivery.address}` }
                     ]
                 },
                 callback: async function (response) {
@@ -890,22 +877,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const orderData = {
                         orderId: orderId,
                         userId: currentUser.uid,
-                        userName: currentUser.name,
+                        userName: currentUser.displayName || currentUser.name,
                         userEmail: currentUser.email,
                         amountUSD: totalAmount,
                         deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
                         items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
-                        status: 'Paid / Pending Processing',
+                        status: 'Paid',
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     };
 
                     try {
-                        // Save Order to Firestore for Admin to see
                         await db.collection('orders').doc(orderId).set(orderData);
-                        alert(`Payment Success! Your order has been registered.\nReference: ${orderId}`);
+                        alert(`Payment Success! Reference: ${orderId}`);
                     } catch (err) {
-                        console.error("Error saving order:", err);
-                        alert("Payment received, but there was an error saving details to our database. Please keep your reference ID.");
+                        console.error("Firestore Save Error:", err);
                     }
 
                     cart = [];
@@ -913,13 +898,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     deliveryOverlay.classList.remove('active');
                 },
                 onClose: function () {
-                    alert('Payment was not completed. You can try again from your cart.');
+                    alert('Payment closed.');
                 }
             });
             handler.openIframe();
         } catch (err) {
-            console.error("Paystack Popup Error:", err);
-            alert("Paystack crashed during startup. Check the console (F12) for details.");
+            console.error("Paystack Startup Error:", err);
+            alert("Paystack failed to start: " + err.message);
         }
     }
 
