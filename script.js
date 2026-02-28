@@ -832,75 +832,95 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function payWithPaystack(amountUSD, delivery) {
+        console.log("Paystack: Starting initialization...");
+        console.log("Paystack: Key being used:", CONFIG.PAYSTACK_PUBLIC_KEY.substring(0, 7) + "...");
+
+        // AUTO-DETECT LIVE KEY ON LOCALHOST
+        if (window.location.hostname === "localhost" && CONFIG.PAYSTACK_PUBLIC_KEY.startsWith("pk_live")) {
+            console.error("PAYSTACK ERROR: You are using a LIVE key on localhost. This will NOT work.");
+            alert("❌ CANNOT INITIALIZE PAYMENT: You are using a 'pk_live' key on Localhost. Paystack blocks live payments on local servers. Please use your 'pk_test' key for testing.");
+            return;
+        }
+
+        if (typeof PaystackPop === 'undefined') {
+            alert("❌ ERROR: Paystack library is not loaded. Please check your internet connection and refresh.");
+            return;
+        }
+
         // Convert USD to GHS for Paystack (if needed for local payment methods like Momo)
         const amountGHS = amountUSD * CONFIG.CONVERSION_RATE_USD_TO_GHS;
         const amountInPesewas = Math.round(amountGHS * 100);
 
-        let handler = PaystackPop.setup({
-            key: CONFIG.PAYSTACK_PUBLIC_KEY,
-            email: currentUser.email,
-            amount: amountInPesewas,
-            currency: CONFIG.CURRENCY,
-            ref: 'DONALD-' + Math.floor((Math.random() * 1000000000) + 1),
-            channels: ['card', 'bank', 'bank_transfer', 'mobile_money'],
-            metadata: {
-                custom_fields: [
-                    {
-                        display_name: "Customer Name",
-                        variable_name: "customer_name",
-                        value: currentUser.name
-                    },
-                    {
-                        display_name: "Delivery Address",
-                        variable_name: "delivery_address",
-                        value: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`
-                    },
-                    {
-                        display_name: "Cart Summary",
-                        variable_name: "cart_summary",
-                        value: cart.map(item => item.name).join(', ')
-                    },
-                    {
-                        display_name: "Payout Account",
-                        variable_name: "payout_account",
-                        value: "2061250008399"
+        try {
+            let handler = PaystackPop.setup({
+                key: CONFIG.PAYSTACK_PUBLIC_KEY,
+                email: currentUser.email,
+                amount: amountInPesewas,
+                currency: CONFIG.CURRENCY,
+                ref: 'DONALD-' + Math.floor((Math.random() * 1000000000) + 1),
+                channels: ['card', 'bank', 'bank_transfer', 'mobile_money'],
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Customer Name",
+                            variable_name: "customer_name",
+                            value: currentUser.name
+                        },
+                        {
+                            display_name: "Delivery Address",
+                            variable_name: "delivery_address",
+                            value: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`
+                        },
+                        {
+                            display_name: "Cart Summary",
+                            variable_name: "cart_summary",
+                            value: cart.map(item => item.name).join(', ')
+                        },
+                        {
+                            display_name: "Payout Account",
+                            variable_name: "payout_account",
+                            value: "2061250008399"
+                        }
+                    ]
+                },
+                callback: async function (response) {
+                    const orderId = response.reference;
+                    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+
+                    const orderData = {
+                        orderId: orderId,
+                        userId: currentUser.uid,
+                        userName: currentUser.name,
+                        userEmail: currentUser.email,
+                        amountUSD: totalAmount,
+                        deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
+                        items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
+                        status: 'Paid / Pending Processing',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    try {
+                        // Save Order to Firestore for Admin to see
+                        await db.collection('orders').doc(orderId).set(orderData);
+                        alert(`Payment Success! Your order has been registered.\nReference: ${orderId}`);
+                    } catch (err) {
+                        console.error("Error saving order:", err);
+                        alert("Payment received, but there was an error saving details to our database. Please keep your reference ID.");
                     }
-                ]
-            },
-            callback: async function (response) {
-                const orderId = response.reference;
-                const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
 
-                const orderData = {
-                    orderId: orderId,
-                    userId: currentUser.uid,
-                    userName: currentUser.name,
-                    userEmail: currentUser.email,
-                    amountUSD: totalAmount,
-                    deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
-                    items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
-                    status: 'Paid / Pending Processing',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                try {
-                    // Save Order to Firestore for Admin to see
-                    await db.collection('orders').doc(orderId).set(orderData);
-                    alert(`Payment Success! Your order has been registered.\nReference: ${orderId}`);
-                } catch (err) {
-                    console.error("Error saving order:", err);
-                    alert("Payment received, but there was an error saving details to our database. Please keep your reference ID.");
+                    cart = [];
+                    updateCart();
+                    deliveryOverlay.classList.remove('active');
+                },
+                onClose: function () {
+                    alert('Payment was not completed. You can try again from your cart.');
                 }
-
-                cart = [];
-                updateCart();
-                deliveryOverlay.classList.remove('active');
-            },
-            onClose: function () {
-                alert('Payment was not completed. You can try again from your cart.');
-            }
-        });
-        handler.openIframe();
+            });
+            handler.openIframe();
+        } catch (err) {
+            console.error("Paystack Popup Error:", err);
+            alert("Paystack crashed during startup. Check the console (F12) for details.");
+        }
     }
 
     // ---------------------------------------------------------
@@ -1253,5 +1273,6 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     })();
 });
+
 
 
