@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
         GOOGLE_CLIENT_ID: '233214895227-sug4rhttgo35fr45die0906go676odb2.apps.googleusercontent.com', // UPDATED WITH USER CLIENT ID
         CURRENCY: 'GHS',
         CONVERSION_RATE_USD_TO_GHS: 14.77, // Fixed rate for demonstration (Adjust as needed)
-        STORE_NAME: 'Alfred Tech Hub'
+        STORE_NAME: 'Alfred Tech Hub',
+        ADMIN_EMAIL: 'narhsnazzisco@gmail.com' // Defining the owner/admin
     };
 
     // Firebase Configuration
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
     // ---------------------------------------------------------
     // 1. DATA & STATE
@@ -295,6 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (viewName === 'signup') signupFormContainer.style.display = 'block';
         else if (viewName === 'forgot') forgotPassContainer.style.display = 'block';
         else if (viewName === 'tfa') tfaFormContainer.style.display = 'block';
+        else if (viewName === 'onboarding') {
+            document.getElementById('onboarding-form-container').style.display = 'block';
+            const msg = document.getElementById('auth-msg');
+            if (msg) msg.style.display = 'none';
+        }
     }
 
     menuToggle.onclick = () => {
@@ -360,6 +367,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userFullName) userFullName.textContent = currentUser.name;
             if (loginBtn) loginBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'block';
+
+            // Admin features check
+            const isAdmin = currentUser.email === CONFIG.ADMIN_EMAIL;
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.style.display = isAdmin ? 'block' : 'none';
+            });
 
             // Mobile Nav Updates
             mobileLoginLinks.forEach(el => el.style.display = 'none');
@@ -427,12 +440,50 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
             await userCredential.user.updateProfile({ displayName: name });
-            alert(`🎉 Account Created Successfully!\nWelcome, ${name}!`);
-            authGate.style.display = 'none';
+
+            // Instead of closing the gate, switch to onboarding
+            switchAuthView('onboarding');
+
         } catch (error) {
             alert("Signup failed: " + error.message);
         }
     };
+
+    // Data Collection (Onboarding) Submission
+    const onboardingForm = document.getElementById('onboarding-form');
+    if (onboardingForm) {
+        onboardingForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            const userData = {
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                phone: document.getElementById('onboarding-phone').value,
+                institution: document.getElementById('onboarding-institution').value,
+                role: document.getElementById('onboarding-role').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // Save to Firestore
+                await db.collection('users').doc(user.uid).set(userData, { merge: true });
+
+                // Also save to LocalStorage for offline/guest mode (optional)
+                localStorage.setItem(`user_data_${user.uid}`, JSON.stringify(userData));
+
+                alert(`🎉 Setup Complete!\nWelcome to Alfred Tech Hub, ${user.displayName}!`);
+                authGate.style.display = 'none';
+                checkAuth();
+            } catch (error) {
+                console.error("Error saving user data:", error);
+                alert("Internal error saving data. Your account is created, but please update your profile later.");
+                authGate.style.display = 'none';
+            }
+        };
+    }
 
     loginForm.onsubmit = async (e) => {
         e.preventDefault();
@@ -534,6 +585,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (sectionId === 'settings') {
                 updateSettingsUI();
+            } else if (sectionId === 'admin') {
+                loadAdminData();
             }
 
             // Close menu after clicking a link
@@ -814,8 +867,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 ]
             },
-            callback: function (response) {
-                alert(`Payment Success! Reference: ${response.reference}\n\nThank you for choosing ${CONFIG.STORE_NAME}!`);
+            callback: async function (response) {
+                const orderId = response.reference;
+                const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+
+                const orderData = {
+                    orderId: orderId,
+                    userId: currentUser.uid,
+                    userName: currentUser.name,
+                    userEmail: currentUser.email,
+                    amountUSD: totalAmount,
+                    deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
+                    items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
+                    status: 'Paid / Pending Processing',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    // Save Order to Firestore for Admin to see
+                    await db.collection('orders').doc(orderId).set(orderData);
+                    alert(`Payment Success! Your order has been registered.\nReference: ${orderId}`);
+                } catch (err) {
+                    console.error("Error saving order:", err);
+                    alert("Payment received, but there was an error saving details to our database. Please keep your reference ID.");
+                }
+
                 cart = [];
                 updateCart();
                 deliveryOverlay.classList.remove('active');
@@ -941,6 +1017,63 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('2FA has been disabled.');
         }
     };
+
+    // ---------------------------------------------------------
+    // 8. ADMIN DASHBOARD DATA FETCHING
+    // ---------------------------------------------------------
+    async function loadAdminData() {
+        const usersList = document.getElementById('admin-users-list');
+        const ordersList = document.getElementById('admin-orders-list');
+
+        // Fetch Users
+        try {
+            const usersSnapshot = await db.collection('users').orderBy('createdAt', 'desc').limit(50).get();
+            usersList.innerHTML = '';
+            if (usersSnapshot.empty) {
+                usersList.innerHTML = '<p>No users found yet.</p>';
+            } else {
+                usersSnapshot.forEach(doc => {
+                    const u = doc.data();
+                    const div = document.createElement('div');
+                    div.style.padding = '10px';
+                    div.style.borderBottom = '1px solid var(--border)';
+                    div.innerHTML = `
+                        <p><strong>${u.name}</strong> (${u.role})</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted)">${u.email} | ${u.phone}</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted)">School: ${u.institution}</p>
+                        <a href="mailto:${u.email}" style="color:var(--primary); font-size:0.8rem;">Email User</a> | 
+                        <a href="https://wa.me/${u.phone.replace(/[^0-9]/g, '')}" target="_blank" style="color:#25D366; font-size:0.8rem;">WhatsApp</a>
+                    `;
+                    usersList.appendChild(div);
+                });
+            }
+        } catch (err) {
+            console.error("Admin Users Error:", err);
+            usersList.innerHTML = '<p>Error loading users. Check permissions.</p>';
+        }
+
+        // Fetch Orders
+        try {
+            const ordersSnapshot = await db.collection('orders').orderBy('timestamp', 'desc').get();
+            ordersList.innerHTML = '';
+            ordersSnapshot.forEach(doc => {
+                const o = doc.data();
+                const div = document.createElement('div');
+                div.style.padding = '10px';
+                div.style.borderBottom = '1px solid var(--border)';
+                div.innerHTML = `
+                    <p><strong>Order #${o.orderId}</strong> - $${o.amountUSD}</p>
+                    <p style="font-size:0.8rem;">By: ${o.userName}</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted)">Items: ${o.items.map(i => i.name).join(', ')}</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted)">🏠 ${o.deliveryAddress}</p>
+                `;
+                ordersList.appendChild(div);
+            });
+        } catch (err) {
+            console.error("Admin Orders Error:", err);
+            ordersList.innerHTML = '<p>Error loading orders.</p>';
+        }
+    }
 
     // Initial check
     checkAuth();
