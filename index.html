@@ -24,6 +24,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -108,6 +109,38 @@
                     <p class="auth-switch"><span id="cancel-tfa">Back to Login</span></p>
                 </div>
 
+                <!-- 5. ONBOARDING FORM (DATA COLLECTION) -->
+                <div id="onboarding-form-container" style="display: none;">
+                    <div class="auth-header">
+                        <h2>Welcome to Alfred!</h2>
+                        <p>Tell us a bit more about yourself to personalize your experience.</p>
+                    </div>
+                    <form id="onboarding-form">
+                        <div class="input-group">
+                            <input type="tel" id="onboarding-phone" placeholder="Phone Number" required
+                                pattern="[\+]?[0-9\s\-]+" title="Please enter a valid phone number">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="onboarding-institution" placeholder="University / Institution"
+                                required>
+                        </div>
+                        <div class="input-group">
+                            <select id="onboarding-role" required
+                                style="width: 100%; padding: 1rem; border-radius: 12px; background: var(--glass); border: 1px solid var(--border); color: var(--text); margin-bottom: 1rem; outline: none;">
+                                <option value="" disabled selected style="background: var(--surface-solid);">I am a...
+                                </option>
+                                <option value="Student" style="background: var(--surface-solid);">Student</option>
+                                <option value="Lecturer" style="background: var(--surface-solid);">Lecturer</option>
+                                <option value="Researcher" style="background: var(--surface-solid);">Researcher</option>
+                                <option value="Professional" style="background: var(--surface-solid);">Professional
+                                </option>
+                                <option value="Other" style="background: var(--surface-solid);">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="auth-btn">Complete Setup</button>
+                    </form>
+                </div>
+
                 <div class="auth-footer-links">
                     <a href="privacy.html">Privacy Policy</a>
                 </div>
@@ -130,6 +163,9 @@
                         <li class="nav-link" data-section="faq"><span>FAQs</span></li>
                         <li class="nav-link" data-section="contact"><span>Contact Us</span></li>
                         <li class="nav-link" data-section="settings"><span>Security</span></li>
+                        <li class="nav-link admin-only" data-section="admin"
+                            style="display: none; color: var(--secondary) !important; font-weight: 600;"><span>👑 Admin
+                                Hub</span></li>
                         <li class="mobile-only" onclick="document.getElementById('cart-toggle').click()"><span>Cart
                                 (<span class="cart-count-display">0</span>)</span></li>
                         <li class="mobile-only auth-link-login" onclick="document.getElementById('login-btn').click()">
@@ -335,6 +371,33 @@
                                 <p>✓ 2FA is currently active on your account.</p>
                                 <button id="disable-tfa-btn" class="auth-btn"
                                     style="background: #ef4444; margin-top: 10px;">Disable 2FA</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard View -->
+                <div id="admin-section" class="content-section">
+                    <h2 class="section-title">👑 Admin Control Center</h2>
+                    <div class="admin-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                        <!-- Users Management -->
+                        <div class="settings-card">
+                            <h3>Users & Profiles</h3>
+                            <p>Recent signups and detailed user data collection.</p>
+                            <div id="admin-users-list"
+                                style="max-height: 400px; overflow-y: auto; margin-top: 1rem; font-size: 0.9rem;">
+                                <p style="color: var(--text-muted)">Loading users...</p>
+                            </div>
+                        </div>
+
+                        <!-- Orders Management -->
+                        <div class="settings-card">
+                            <h3>Recent Orders</h3>
+                            <p>Monitor successful sales and delivery schedules.</p>
+                            <div id="admin-orders-list"
+                                style="max-height: 400px; overflow-y: auto; margin-top: 1rem; font-size: 0.9rem;">
+                                <p style="color: var(--text-muted)">Loading orders...</p>
                             </div>
                         </div>
                     </div>
