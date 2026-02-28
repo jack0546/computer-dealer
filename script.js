@@ -199,7 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const strengthText = document.getElementById('strength-text');
 
     // ---------------------------------------------------------
-    // 3. PASSWORD VALIDATION
+    // 3. PASSWORD VISIBILITY TOGGLE
+    // ---------------------------------------------------------
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+
+            if (input) {
+                // Toggle input type
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+
+                // Toggle icon
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            }
+        });
+    });
+
+    // ---------------------------------------------------------
+    // 4. PASSWORD VALIDATION
     // ---------------------------------------------------------
     function validatePasswordStrength(password) {
         const minLength = password.length >= 8;
