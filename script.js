@@ -858,53 +858,67 @@ document.addEventListener('DOMContentLoaded', () => {
         const amountInPesewas = Math.round(amountGHS * 100);
 
         try {
+            console.log("Paystack: Initializing popup...");
             let handler = PaystackPop.setup({
                 key: ACTIVE_KEY,
-                email: currentUser.email,
+                email: currentUser.email.trim(),
                 amount: amountInPesewas,
-                currency: CONFIG.CURRENCY,
-                ref: 'DONALD-' + Math.floor((Math.random() * 1000000000) + 1),
+                currency: CONFIG.CURRENCY, // Ensure this matches your account country!
+                ref: 'DL-' + Date.now(),
                 metadata: {
                     custom_fields: [
-                        { display_name: "Customer", variable_name: "customer", value: currentUser.displayName || currentUser.name },
-                        { display_name: "Delivery", variable_name: "delivery", value: `${delivery.name}, ${delivery.phone}, ${delivery.address}` }
+                        {
+                            display_name: "Customer Name",
+                            variable_name: "customer_name",
+                            value: currentUser.displayName || currentUser.name || "Customer"
+                        },
+                        {
+                            display_name: "Delivery Info",
+                            variable_name: "delivery_info",
+                            value: `${delivery.name} | ${delivery.phone} | ${delivery.address}`
+                        }
                     ]
                 },
-                callback: async function (response) {
-                    const orderId = response.reference;
-                    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+                callback: function (response) {
+                    // Paystack does not accept 'async function' as a valid callback in older versions
+                    // We wrap the implementation in an async IIFE
+                    (async () => {
+                        const orderId = response.reference;
+                        const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
 
-                    const orderData = {
-                        orderId: orderId,
-                        userId: currentUser.uid,
-                        userName: currentUser.displayName || currentUser.name,
-                        userEmail: currentUser.email,
-                        amountUSD: totalAmount,
-                        deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
-                        items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
-                        status: 'Paid',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    };
+                        const orderData = {
+                            orderId: orderId,
+                            userId: currentUser.uid,
+                            userName: currentUser.displayName || currentUser.name || "Customer",
+                            userEmail: currentUser.email,
+                            amountUSD: totalAmount,
+                            deliveryAddress: `${delivery.name}, ${delivery.phone}, ${delivery.address}, ${delivery.city}`,
+                            items: cart.map(i => ({ id: i.id, name: i.name, price: i.price })),
+                            status: 'Paid',
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        };
 
-                    try {
-                        await db.collection('orders').doc(orderId).set(orderData);
-                        alert(`Payment Success! Reference: ${orderId}`);
-                    } catch (err) {
-                        console.error("Firestore Save Error:", err);
-                    }
+                        try {
+                            await db.collection('orders').doc(orderId).set(orderData);
+                            alert(`🎉 Payment Successful!\nOrder Reference: ${orderId}`);
+                        } catch (err) {
+                            console.error("Firestore Save Error:", err);
+                            alert("Payment successful, but order recording failed. Please share your reference: " + orderId);
+                        }
 
-                    cart = [];
-                    updateCart();
-                    deliveryOverlay.classList.remove('active');
+                        cart = [];
+                        updateCart();
+                        deliveryOverlay.classList.remove('active');
+                    })();
                 },
                 onClose: function () {
-                    alert('Payment closed.');
+                    alert('Window closed. Payment not finished.');
                 }
             });
             handler.openIframe();
         } catch (err) {
             console.error("Paystack Startup Error:", err);
-            alert("Paystack failed to start: " + err.message);
+            alert("Paystack crashed. If you are in Nigeria, change GHS to NGN in script.js.");
         }
     }
 
