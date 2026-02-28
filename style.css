@@ -147,6 +147,35 @@ body {
     border-color: var(--primary);
 }
 
+.password-field {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.password-field input {
+    padding-right: 3rem !important;
+    margin-bottom: 0 !important;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted);
+    z-index: 10;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    /* Increase hit area */
+}
+
+.toggle-password:hover {
+    color: var(--primary);
+    transform: translateY(-50%) scale(1.1);
+}
+
 .auth-btn {
     width: 100%;
     padding: 1rem;
@@ -1583,4 +1612,3 @@ header {
         justify-content: center;
     }
 }
-
